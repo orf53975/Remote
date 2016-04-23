@@ -1,0 +1,11 @@
+﻿<Window x:Class="RemoteGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="744" Width="1322">
+    <Grid>
+        <Image Name="Image_Test" Margin="0,26,10,72"/>
+        <Slider HorizontalAlignment="Left" Margin="10,658,0,0" VerticalAlignment="Top" Width="205" Minimum="1" Maximum="500" ValueChanged="Slider_ValueChanged" Value="1"/>
+        <Label Name="FPS" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>

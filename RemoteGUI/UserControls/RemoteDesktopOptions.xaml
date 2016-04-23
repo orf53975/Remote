@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="RemoteGUI.UserControls.RemoteDesktopOptions"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="540" d:DesignWidth="960">
+    <Grid>
+        <ComboBox Name="ScreenCaptureMethodComboBox" HorizontalAlignment="Left" Margin="245,50,0,0" VerticalAlignment="Top" Width="165" Loaded="ScreenCaptureMethodComboBox_Loaded" SelectionChanged="ScreenCaptureMethodComboBox_SelectionChanged"/>
+        <Label Content="Scren capture method" HorizontalAlignment="Left" Margin="75,50,0,0" VerticalAlignment="Top"/>
+        <Label Content="Buffering" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="144,90,0,0"/>
+        <Label Content="Copmosition" HorizontalAlignment="Left" Margin="124,130,0,0" VerticalAlignment="Top"/>
+        <Label Content="Format" HorizontalAlignment="Left" Margin="154,170,0,0" VerticalAlignment="Top"/>
+        <Label Content="Frames per seconds (FPS)" HorizontalAlignment="Left" Margin="58,210,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="BufferingComboBox" HorizontalAlignment="Left" Margin="245,94,0,0" VerticalAlignment="Top" Width="165"/>
+        <ComboBox Name="CompositionComboBox" HorizontalAlignment="Left" Margin="245,134,0,0" VerticalAlignment="Top" Width="165"/>
+        <ComboBox Name="FormatComboBox" HorizontalAlignment="Left" Margin="245,174,0,0" VerticalAlignment="Top" Width="165"/>
+        <ComboBox Name="FPSComboBox" HorizontalAlignment="Left" Margin="245,214,0,0" VerticalAlignment="Top" Width="165"/>
+        <Label Content="Desktop" HorizontalAlignment="Left" Margin="214,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Direct3D" HorizontalAlignment="Left" Margin="664,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Compression" HorizontalAlignment="Left" Margin="123,300,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="CompressionComboBox" HorizontalAlignment="Left" Margin="245,304,0,0" VerticalAlignment="Top" Width="165"/>
+        <Label Content="Codec" HorizontalAlignment="Left" Margin="159,340,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="CodecComboBox" HorizontalAlignment="Left" Margin="245,344,0,0" VerticalAlignment="Top" Width="165"/>
+        <Label Content="Block size" HorizontalAlignment="Left" Margin="564,300,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="LZ4BlockSizeComboBox" HorizontalAlignment="Left" Margin="664,304,0,0" VerticalAlignment="Top" Width="165"/>
+        <Button Content="Start" HorizontalAlignment="Left" Margin="797,475,0,0" VerticalAlignment="Top" Width="75" Click="SaveButton_Click"/>
+
+    </Grid>
+</UserControl>
