@@ -70,7 +70,7 @@ namespace Remote
 					break;
 			}
 		}
-		public void OnConnectionAccept(System.Net.Sockets.SocketAsyncEventArgs arg)
+		public bool OnConnectionAccept(System.Net.Sockets.SocketAsyncEventArgs arg)
 		{
 			client = new SOCKET.Client();
 			//System.Net.IPAddress address = arg.ReceiveMessageFromPacketInfo.Address;
@@ -79,6 +79,7 @@ namespace Remote
 			pmIn = new PacketManager(client.bufferIn);
 			pmOut = new PacketManager(client.bufferOut);
 			client.StartReceiveAsync(OnReceiveAsync);
+			return false; //todo: check
 		}
 		public bool OnReceiveAsync(System.Net.Sockets.SocketAsyncEventArgs arg)
 		{

@@ -17,7 +17,7 @@ namespace Remote
 			public Socket socket;
 			public IPAddress ipAddress;
 			public IPEndPoint ipEndPoint;
-			public Action<SocketAsyncEventArgs> onConnectionAccept;
+			public Func<SocketAsyncEventArgs, bool> onConnectionAccept;
 			public Server(string address, int port)
 			{
 				ipAddress = IPAddress.Parse(address);
@@ -45,7 +45,7 @@ namespace Remote
 				socket.NoDelay = true;
 				return true;
 			}
-			public void StartReceiveAsync(Action<SocketAsyncEventArgs> action)
+			public void StartReceiveAsync(Func<SocketAsyncEventArgs, bool> action)
 			{
 				onConnectionAccept = action;
 				Init();
@@ -71,8 +71,7 @@ namespace Remote
 			{
 				//Console.WriteLine("Got a package");
 				//Process(e);
-				onConnectionAccept(e);
-				Start(e);
+				if(onConnectionAccept(e)) Start(e);
 			}
 		}
 		public class Client

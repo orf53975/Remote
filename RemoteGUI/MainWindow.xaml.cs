@@ -19,13 +19,18 @@ using System.Drawing.Imaging;
 using System.Threading;
 using System.Diagnostics;
 using Remote;
+using MahApps.Metro.Controls;
 namespace RemoteGUI
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class MainWindow : MetroWindow
 	{
+		SOCKET.Server server;
+		SOCKET.Client client;
+
+
 		public DispatcherTimer dt;
 		public int fps = 1;
 		public long oldTick;
@@ -41,18 +46,28 @@ namespace RemoteGUI
 		//public static extern bool DeleteObject(IntPtr hObject);
 		public MainWindow()
 		{
-			Screen.EnableComposition(false);
+			server = new SOCKET.Server(Remote.Remote.settings.remoteDesktopPort);
+			server.Listen();
+			server.StartReceiveAsync(OnConnectionAccept);
+
+			InitializeComponent();
+			Address.ItemsSource = Remote.Remote.settings.addresses;
+
+
+
+
+
+			//Screen.EnableComposition(false);
 			sw = new Stopwatch();
 			sw.Start();
-			InitializeComponent();
 			dt = new DispatcherTimer(DispatcherPriority.Send);
 			dt.Tick += dt_Tick;
 			dt.Interval = new TimeSpan(0, 0, 0, 0, /*1000 / fps*/ 200);
 			oldTick = Environment.TickCount;
 			dt.Start();
-			Thread thread = new Thread(dt_Tick1);
+			/*Thread thread = new Thread(dt_Tick1);
 			thread.Priority = ThreadPriority.Highest;
-			thread.Start();
+			thread.Start();*/
 
 			/*Thread thread1 = new Thread(dt_Tick1);
 			thread1.Priority = ThreadPriority.Highest;
@@ -62,6 +77,10 @@ namespace RemoteGUI
 			thread2.Priority = ThreadPriority.Highest;
 			thread2.Start();*/
 
+		}
+		private bool OnConnectionAccept(System.Net.Sockets.SocketAsyncEventArgs arg)
+		{
+			return false;
 		}
 		/*protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
@@ -232,9 +251,33 @@ namespace RemoteGUI
 				return Environment.CurrentDirectory;
 			}
 		}
-		public void jajj()
+		private void Connect_Click(object sender, RoutedEventArgs e)
 		{
-			this.Show();
+
+		}
+
+		private void RemoveAddress_Click(object sender, RoutedEventArgs e)
+		{
+			if (Remote.Remote.settings.addresses.Contains(Address.Text))
+			{
+				Remote.Remote.settings.addresses.Remove(Address.Text);
+			}
+			Address.ItemsSource = null; //Without this the dropdown isn't updated, although autocompletion works, strange, maybe a bug in current Metro nuget
+			Address.ItemsSource = Remote.Remote.settings.addresses;
+		}
+
+		private void SaveAddress_Click(object sender, RoutedEventArgs e)
+		{
+			if(Remote.Remote.settings.addresses.Contains(Address.Text))
+			{
+
+			}
+			else
+			{
+				Remote.Remote.settings.addresses.Add(Address.Text);
+			}
+			Address.ItemsSource = null; //Without this the dropdown isn't updated, although autocompletion works, strange, maybe a bug in current Metro nuget
+			Address.ItemsSource = Remote.Remote.settings.addresses;
 		}
 	}
 }

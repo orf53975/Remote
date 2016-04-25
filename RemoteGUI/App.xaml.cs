@@ -18,7 +18,9 @@ namespace RemoteGUI
 		{
 			if (e.Args.Length == 0) //nincs parancs, normális indítás
 			{
+				Settings.Load();
 				MainWindow mw = new MainWindow();
+				mw.Show();
 			}
 			else if (e.Args.Length == 2)
 			{

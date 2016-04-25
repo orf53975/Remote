@@ -249,5 +249,10 @@ namespace Remote
 			[DllImport("user32", EntryPoint = "ReleaseDC", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
 			public static extern int ReleaseDC(int hwnd, int hdc);
 		}
+
+		public static class Remote
+		{
+			public static Settings settings;
+		}
 	//}
 }

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="RemoteDesktop" Height="720" Width="1280">
     <Grid>
-        
+        <Menu HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="1272"/>
+
     </Grid>
 </Window>

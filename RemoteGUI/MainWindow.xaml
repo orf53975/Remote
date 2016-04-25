@@ -1,11 +1,33 @@
-﻿<Window x:Class="RemoteGUI.MainWindow"
+﻿<Controls:MetroWindow x:Class="RemoteGUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="744" Width="1322">
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        Title="MainWindow" Height="720" Width="1280" WindowStartupLocation="CenterScreen"
+                      WindowTransitionsEnabled="False">
     <Grid>
-        <Image Name="Image_Test" Margin="0,26,10,72"/>
+
         <Slider HorizontalAlignment="Left" Margin="10,658,0,0" VerticalAlignment="Top" Width="205" Minimum="1" Maximum="500" ValueChanged="Slider_ValueChanged" Value="1"/>
-        <Label Name="FPS" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Name="FPS" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="799,327,0,0"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="1162,427,0,0" VerticalAlignment="Top" Width="83" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1"/>
+        <TabControl HorizontalAlignment="Left" Height="690" VerticalAlignment="Top" Width="1272">
+            <TabItem Header=" Remote Desktop ">
+                <Grid>
+                    <Button Name="Connect" Content="Connect" HorizontalAlignment="Left" Margin="370,130,0,0" VerticalAlignment="Top" Width="75" Click="Connect_Click" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1"/>
+
+                    <ComboBox Name="Address" HorizontalAlignment="Left" Margin="128,80,0,0" VerticalAlignment="Top" Width="317" IsEditable="True"/>
+                    <Label Content="Address" HorizontalAlignment="Left" Margin="20,80,0,0" VerticalAlignment="Top"/>
+                    <Button Name="RemoveAddress" Content="Remove" HorizontalAlignment="Left" Margin="249,130,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="RemoveAddress_Click"/>
+                    <Button Name="SaveAddress" Content="Save" HorizontalAlignment="Left" Margin="128,130,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="SaveAddress_Click"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header=" Desktop Recording ">
+                <Grid/>
+            </TabItem>
+            <TabItem Header=" Game Recording ">
+                <Grid/>
+            </TabItem>
+        </TabControl>
 
     </Grid>
-</Window>
+</Controls:MetroWindow>
