@@ -21,7 +21,7 @@ namespace Remote
 			{
 				using (FileStream fs = new FileStream("settings.set", FileMode.OpenOrCreate, FileAccess.Write))
 				{
-					ProtoBuf.Serializer.Serialize(fs, Remote.settings);
+					ProtoBuf.Serializer.Serialize(fs, Remote.Settings);
 				}
 			}
 			catch
@@ -36,12 +36,12 @@ namespace Remote
 			{
 				using (FileStream fs = new FileStream("settings.set", FileMode.Open, FileAccess.Read))
 				{
-					Remote.settings = ProtoBuf.Serializer.Deserialize<Settings>(fs);
+					Remote.Settings = ProtoBuf.Serializer.Deserialize<Settings>(fs);
 				}
 			}
 			else //load default
 			{
-				Remote.settings = new Settings();
+				Remote.Settings = new Settings();
 				return new ErrorCode { error = true };
 			}
 			return new ErrorCode { error = false };

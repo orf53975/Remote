@@ -54,6 +54,7 @@
     <Compile Include="Commands.cs" />
     <Compile Include="CONNECT.cs" />
     <Compile Include="Connections.cs" />
+    <Compile Include="ConsoleWriter.cs" />
     <Compile Include="GET.cs" />
     <Compile Include="NetworkStream.cs" />
     <Compile Include="PacketManager.cs" />

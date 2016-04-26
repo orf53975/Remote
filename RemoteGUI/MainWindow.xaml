@@ -5,11 +5,9 @@
         Title="MainWindow" Height="720" Width="1280" WindowStartupLocation="CenterScreen"
                       WindowTransitionsEnabled="False">
     <Grid>
-
-        <Slider HorizontalAlignment="Left" Margin="10,658,0,0" VerticalAlignment="Top" Width="205" Minimum="1" Maximum="500" ValueChanged="Slider_ValueChanged" Value="1"/>
         <Label Name="FPS" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="799,327,0,0"/>
         <Button Content="Button" HorizontalAlignment="Left" Margin="1162,427,0,0" VerticalAlignment="Top" Width="83" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1"/>
-        <TabControl HorizontalAlignment="Left" Height="690" VerticalAlignment="Top" Width="1272">
+        <TabControl>
             <TabItem Header=" Remote Desktop ">
                 <Grid>
                     <Button Name="Connect" Content="Connect" HorizontalAlignment="Left" Margin="370,130,0,0" VerticalAlignment="Top" Width="75" Click="Connect_Click" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1"/>
@@ -18,7 +16,6 @@
                     <Label Content="Address" HorizontalAlignment="Left" Margin="20,80,0,0" VerticalAlignment="Top"/>
                     <Button Name="RemoveAddress" Content="Remove" HorizontalAlignment="Left" Margin="249,130,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="RemoveAddress_Click"/>
                     <Button Name="SaveAddress" Content="Save" HorizontalAlignment="Left" Margin="128,130,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="SaveAddress_Click"/>
-
                 </Grid>
             </TabItem>
             <TabItem Header=" Desktop Recording ">
@@ -28,6 +25,16 @@
                 <Grid/>
             </TabItem>
         </TabControl>
-
+        <StatusBar Height="22" VerticalAlignment="Bottom" Background="{DynamicResource GrayBrush9}">
+            <TextBlock Name="ConsoleQuickText" TextWrapping="Wrap" Text=""/>
+        </StatusBar>
+        <Controls:FlyoutsControl>
+            <Controls:Flyout Position="Bottom" Height="300" IsOpen="True" CloseButtonVisibility="Collapsed" TitleVisibility="Collapsed" >
+                <Grid>
+                    <TextBox Name="ConsoleInputText" Text="asd" Margin="-21,278,-4,-4" BorderThickness="0"/>
+                    <TextBox Name="ConsoleText" TextWrapping="Wrap" Text="sd" Margin="-21,0,-4,20"/>
+                </Grid>
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
     </Grid>
 </Controls:MetroWindow>

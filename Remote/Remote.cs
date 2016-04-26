@@ -252,7 +252,29 @@ namespace Remote
 
 		public static class Remote
 		{
-			public static Settings settings;
+			private static Settings settings;
+			/*public static Settings settings
+			{
+				get
+				{
+					return setting;
+				}
+				set
+				{
+					setting = value;
+				}
+			}*/
+			public static Settings Settings
+			{
+				get
+				{
+					return settings;
+				}
+				set
+				{
+					settings = value;
+				}
+			}
 		}
 	//}
 }
