@@ -6,7 +6,6 @@
                       WindowTransitionsEnabled="False">
     <Grid>
         <Label Name="FPS" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="799,327,0,0"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="1162,427,0,0" VerticalAlignment="Top" Width="83" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1"/>
         <TabControl>
             <TabItem Header=" Remote Desktop ">
                 <Grid>
@@ -16,6 +15,7 @@
                     <Label Content="Address" HorizontalAlignment="Left" Margin="20,80,0,0" VerticalAlignment="Top"/>
                     <Button Name="RemoveAddress" Content="Remove" HorizontalAlignment="Left" Margin="249,130,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="RemoveAddress_Click"/>
                     <Button Name="SaveAddress" Content="Save" HorizontalAlignment="Left" Margin="128,130,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="SaveAddress_Click"/>
+
                 </Grid>
             </TabItem>
             <TabItem Header=" Desktop Recording ">
@@ -25,13 +25,13 @@
                 <Grid/>
             </TabItem>
         </TabControl>
-        <StatusBar Height="22" VerticalAlignment="Bottom" Background="{DynamicResource GrayBrush9}">
+        <StatusBar Height="22" VerticalAlignment="Bottom" Background="{DynamicResource GrayBrush9}" MouseLeftButtonUp="StatusBar_MouseLeftButtonUp">
             <TextBlock Name="ConsoleQuickText" TextWrapping="Wrap" Text=""/>
         </StatusBar>
-        <Controls:FlyoutsControl>
-            <Controls:Flyout Position="Bottom" Height="300" IsOpen="True" CloseButtonVisibility="Collapsed" TitleVisibility="Collapsed" >
+        <Controls:FlyoutsControl Name="FlyoutsControlAll" Visibility="Hidden">
+            <Controls:Flyout Name="ConsoleFlyout" Position="Bottom" Height="300" IsOpen="False" CloseButtonVisibility="Collapsed" TitleVisibility="Collapsed" >
                 <Grid>
-                    <TextBox Name="ConsoleInputText" Text="asd" Margin="-21,278,-4,-4" BorderThickness="0"/>
+                    <TextBox Name="ConsoleInputText" Text="asd" Margin="-21,278,-4,-4" BorderThickness="0" PreviewKeyDown="ConsoleInputText_PreviewKeyDown"/>
                     <TextBox Name="ConsoleText" TextWrapping="Wrap" Text="sd" Margin="-21,0,-4,20"/>
                 </Grid>
             </Controls:Flyout>

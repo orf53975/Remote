@@ -30,6 +30,7 @@ namespace RemoteGUI
 		SOCKET.Server server;
 		SOCKET.Client client;
 		ConsoleWriter cw = new ConsoleWriter();
+		string tempText;
 
 		public DispatcherTimer dt;
 		public int fps = 1;
@@ -46,12 +47,15 @@ namespace RemoteGUI
 		//public static extern bool DeleteObject(IntPtr hObject);
 		public MainWindow()
 		{
+			InitializeComponent();
+			FlyoutsControlAll.Visibility = System.Windows.Visibility.Visible;
+			Address.ItemsSource = Remote.Remote.Settings.addresses;
+
+
 			server = new SOCKET.Server(Remote.Remote.Settings.remoteDesktopPort);
 			server.Listen();
 			server.StartReceiveAsync(OnConnectionAccept);
 
-			InitializeComponent();
-			Address.ItemsSource = Remote.Remote.Settings.addresses;
 
 
 
@@ -60,7 +64,7 @@ namespace RemoteGUI
 			sw.Start();
 			dt = new DispatcherTimer(DispatcherPriority.Send);
 			dt.Tick += dt_Tick;
-			dt.Interval = new TimeSpan(0, 0, 0, 0, /*1000 / fps*/ 10);
+			dt.Interval = new TimeSpan(0, 0, 0, 0, /*1000 / fps*/ 40);
 			oldTick = Environment.TickCount;
 			dt.Start();
 			/*Thread thread = new Thread(dt_Tick1);
@@ -104,11 +108,26 @@ namespace RemoteGUI
 		void dt_Tick(object sender, EventArgs e)
 		{
 			FPS.Content = sajt;
+			cw.WriteLine(Environment.TickCount.ToString());
 			/*cw.WriteLine(Environment.TickCount.ToString());
 			ConsoleQuickText.Text = cw.GetLastLine();
 			ConsoleText.Text = cw.Update();
 			ConsoleText.ScrollToEnd();*/
 			//dt_Tick11();
+
+			if (ConsoleFlyout.IsOpen)
+			{
+				tempText = cw.Update();
+				if (tempText != null)
+				{
+					ConsoleText.Text = tempText;
+					ConsoleText.ScrollToEnd();
+				}
+			}
+			else
+			{
+				ConsoleQuickText.Text = cw.GetLastLine();
+			}
 		}
 		async void dt_Tick1()
 		{
@@ -257,7 +276,6 @@ namespace RemoteGUI
 		{
 
 		}
-
 		private void RemoveAddress_Click(object sender, RoutedEventArgs e)
 		{
 			if (Remote.Remote.Settings.addresses.Contains(Address.Text))
@@ -267,7 +285,6 @@ namespace RemoteGUI
 			Address.ItemsSource = null; //Without this the dropdown isn't updated, although autocompletion works, strange, maybe a bug in current Metro nuget
 			Address.ItemsSource = Remote.Remote.Settings.addresses;
 		}
-
 		private void SaveAddress_Click(object sender, RoutedEventArgs e)
 		{
 			if(Remote.Remote.Settings.addresses.Contains(Address.Text))
@@ -280,6 +297,24 @@ namespace RemoteGUI
 			}
 			Address.ItemsSource = null; //Without this the dropdown isn't updated, although autocompletion works, strange, maybe a bug in current Metro nuget
 			Address.ItemsSource = Remote.Remote.Settings.addresses;
+		}
+		private void ConsoleInputText_PreviewKeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Enter)
+			{
+				e.Handled = true; //Not so important, as TextBox doesn't makes new lines.
+				//Todo: merge console project
+			}
+			else if (e.Key == Key.Escape)
+			{
+				e.Handled = true;
+				ConsoleFlyout.IsOpen = false;
+			}
+		}
+
+		private void StatusBar_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			ConsoleFlyout.IsOpen = true;
 		}
 	}
 }

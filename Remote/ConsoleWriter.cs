@@ -45,26 +45,33 @@ namespace Remote
 		}
 		public void WriteLine(string s)
 		{
+			changed = true;
 			Append(s);
 			Append("\n");
 			lastLine = s;
 		}
 		public void WriteLine(string s, params object[] o)
 		{
+			changed = true;
 			lastLine = String.Format(s, o);
 			Append(s);
 			Append("\n");
 		}
 		public string Update()
 		{
-			if (fifo.Length <= DisplaySize)
+			if (changed)
 			{
-				return fifo.ToString();
+				changed = false;
+				if (fifo.Length <= DisplaySize)
+				{
+					return fifo.ToString();
+				}
+				else
+				{
+					return fifo.ToString(fifo.Length - DisplaySize, DisplaySize);
+				}
 			}
-			else
-			{
-				return fifo.ToString(fifo.Length - DisplaySize, DisplaySize);
-			}
+			else return null;
 		}
 		public string GetLastLine()
 		{
