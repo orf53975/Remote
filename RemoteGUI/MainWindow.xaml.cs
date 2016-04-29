@@ -27,9 +27,19 @@ namespace RemoteGUI
 	/// </summary>
 	public partial class MainWindow : MetroWindow
 	{
+		public static string[] screenCaptureMethods = new string[] { "GDI", "BitBlt", "DirectX" };
+		public static string[] frameBufferings = new string[] { "Disabled", "Enabled" };
+		public static string[] desktopCompositions = new string[] { "Enabled", "Disabled" };
+		public static string[] pixelFormats = new string[] { "32bppARGB", "24bppRGB", "16bppRGB565" };
+		public static string[] framesPerSeconds = new string[] { "5", "10", "15", "20", "25", "30", "Max" };
+		public static string[] compressions = new string[] { "Lossless", "Lossy" };
+		public static string[] losslessCodec = new string[] { "LZ4" };
+		public static string[] lossyCodec = new string[] { "ffmpeg" };
+		public static string[] LZ4BlockSizes = new string[] { "32kb", "64kb", "128kb", "256kb", "512kb", "Max" };
+
 		SOCKET.Server server;
 		SOCKET.Client client;
-		ConsoleWriter cw = new ConsoleWriter();
+		ConsoleWriter cw = new ConsoleWriter(1000);
 		string tempText;
 
 		public DispatcherTimer dt;
@@ -47,8 +57,22 @@ namespace RemoteGUI
 		//public static extern bool DeleteObject(IntPtr hObject);
 		public MainWindow()
 		{
+
 			InitializeComponent();
+
 			FlyoutsControlAll.Visibility = System.Windows.Visibility.Visible;
+
+			ScreenCaptureMethodComboBox.ItemsSource = screenCaptureMethods;
+			BufferingComboBox.ItemsSource = frameBufferings;
+			CompositionComboBox.ItemsSource = desktopCompositions;
+			FormatComboBox.ItemsSource = pixelFormats;
+			FPSComboBox.ItemsSource = framesPerSeconds;
+			CompressionComboBox.ItemsSource = compressions;
+			CodecComboBox.ItemsSource = losslessCodec;
+			LZ4BlockSizeComboBox.ItemsSource = LZ4BlockSizes;
+
+
+			
 			Address.ItemsSource = Remote.Remote.Settings.addresses;
 
 

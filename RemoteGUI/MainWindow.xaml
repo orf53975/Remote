@@ -15,7 +15,31 @@
                     <Label Content="Address" HorizontalAlignment="Left" Margin="20,80,0,0" VerticalAlignment="Top"/>
                     <Button Name="RemoveAddress" Content="Remove" HorizontalAlignment="Left" Margin="249,130,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="RemoveAddress_Click"/>
                     <Button Name="SaveAddress" Content="Save" HorizontalAlignment="Left" Margin="128,130,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="SaveAddress_Click"/>
-
+                    <Grid Margin="479,0,0,0">
+                        <ComboBox Name="ScreenCaptureMethodComboBox" HorizontalAlignment="Left" Margin="245,50,0,0" VerticalAlignment="Top" Width="165"/>
+                        <Label Content="Scren capture method" HorizontalAlignment="Left" Margin="75,50,0,0" VerticalAlignment="Top"/>
+                        <Label Content="Buffering" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="144,94,0,0"/>
+                        <Label Content="Copmosition" HorizontalAlignment="Left" Margin="124,134,0,0" VerticalAlignment="Top"/>
+                        <Label Content="Format" HorizontalAlignment="Left" Margin="154,174,0,0" VerticalAlignment="Top"/>
+                        <Label Content="Frames per seconds (FPS)" HorizontalAlignment="Left" Margin="58,214,0,0" VerticalAlignment="Top"/>
+                        <ComboBox Name="BufferingComboBox" HorizontalAlignment="Left" Margin="245,94,0,0" VerticalAlignment="Top" Width="165"/>
+                        <ComboBox Name="CompositionComboBox" HorizontalAlignment="Left" Margin="245,134,0,0" VerticalAlignment="Top" Width="165"/>
+                        <ComboBox Name="FormatComboBox" HorizontalAlignment="Left" Margin="245,174,0,0" VerticalAlignment="Top" Width="165"/>
+                        <ComboBox Name="FPSComboBox" HorizontalAlignment="Left" Margin="245,214,0,0" VerticalAlignment="Top" Width="165"/>
+                        <Label Content="Desktop" HorizontalAlignment="Left" Margin="214,10,0,0" VerticalAlignment="Top"/>
+                        <Label Content="Direct3D" HorizontalAlignment="Left" Margin="664,10,0,0" VerticalAlignment="Top"/>
+                        <Label Content="Compression" HorizontalAlignment="Left" Margin="123,304,0,0" VerticalAlignment="Top"/>
+                        <ComboBox Name="CompressionComboBox" HorizontalAlignment="Left" Margin="245,304,0,0" VerticalAlignment="Top" Width="165"/>
+                        <Label Content="Codec" HorizontalAlignment="Left" Margin="159,344,0,0" VerticalAlignment="Top"/>
+                        <ComboBox Name="CodecComboBox" HorizontalAlignment="Left" Margin="245,344,0,0" VerticalAlignment="Top" Width="165"/>
+                        <Label Content="Block size" HorizontalAlignment="Left" Margin="437,304,0,0" VerticalAlignment="Top"/>
+                        <ComboBox Name="LZ4BlockSizeComboBox" HorizontalAlignment="Left" Margin="522,304,0,0" VerticalAlignment="Top" Width="165"/>
+                        <ComboBox x:Name="ScreenCaptureMethodComboBox_Copy" HorizontalAlignment="Left" Margin="522,50,0,0" VerticalAlignment="Top" Width="165"/>
+                        <ComboBox x:Name="BufferingComboBox_Copy" HorizontalAlignment="Left" Margin="522,94,0,0" VerticalAlignment="Top" Width="165"/>
+                        <ComboBox x:Name="CompositionComboBox_Copy" HorizontalAlignment="Left" Margin="522,134,0,0" VerticalAlignment="Top" Width="165"/>
+                        <ComboBox x:Name="FormatComboBox_Copy" HorizontalAlignment="Left" Margin="522,174,0,0" VerticalAlignment="Top" Width="165"/>
+                        <ComboBox x:Name="FPSComboBox_Copy" HorizontalAlignment="Left" Margin="522,214,0,0" VerticalAlignment="Top" Width="165"/>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header=" Desktop Recording ">

@@ -9,10 +9,20 @@ namespace Remote
 	//Based on: http://stackoverflow.com/questions/18988170/making-a-net-textbox-work-fifo-style
 	public class ConsoleWriter
 	{
-		const int DisplaySize = 5000;
-		private StringBuilder fifo = new StringBuilder(2 * DisplaySize);
+		private int DisplaySize = 5000;
+		private StringBuilder fifo;
 		private bool changed;
 		private string lastLine;
+
+		public ConsoleWriter()
+		{
+			fifo = new StringBuilder(2 * DisplaySize);
+		}
+		public ConsoleWriter(int size)
+		{
+			DisplaySize = size;
+			fifo = new StringBuilder(2 * DisplaySize);
+		}
 
 		private void Append(string s)
 		{
@@ -46,9 +56,9 @@ namespace Remote
 		public void WriteLine(string s)
 		{
 			changed = true;
+			lastLine = s;
 			Append(s);
 			Append("\n");
-			lastLine = s;
 		}
 		public void WriteLine(string s, params object[] o)
 		{
