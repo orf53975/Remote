@@ -29,17 +29,33 @@
                         <Label Content="Desktop" HorizontalAlignment="Left" Margin="214,10,0,0" VerticalAlignment="Top"/>
                         <Label Content="Direct3D" HorizontalAlignment="Left" Margin="664,10,0,0" VerticalAlignment="Top"/>
                         <Label Content="Compression" HorizontalAlignment="Left" Margin="123,304,0,0" VerticalAlignment="Top"/>
-                        <ComboBox Name="CompressionComboBox" HorizontalAlignment="Left" Margin="245,304,0,0" VerticalAlignment="Top" Width="165"/>
-                        <Label Content="Codec" HorizontalAlignment="Left" Margin="159,344,0,0" VerticalAlignment="Top"/>
-                        <ComboBox Name="CodecComboBox" HorizontalAlignment="Left" Margin="245,344,0,0" VerticalAlignment="Top" Width="165"/>
-                        <Label Content="Block size" HorizontalAlignment="Left" Margin="437,304,0,0" VerticalAlignment="Top"/>
-                        <ComboBox Name="LZ4BlockSizeComboBox" HorizontalAlignment="Left" Margin="522,304,0,0" VerticalAlignment="Top" Width="165"/>
+                        <ComboBox Name="CompressionComboBox" HorizontalAlignment="Left" Margin="245,304,0,0" VerticalAlignment="Top" Width="165" SelectionChanged="CompressionComboBox_SelectionChanged"/>
+                        <Label Content="Codec" HorizontalAlignment="Left" Margin="444,304,0,0" VerticalAlignment="Top"/>
+                        <ComboBox Name="CodecComboBox" HorizontalAlignment="Left" Margin="522,304,0,0" VerticalAlignment="Top" Width="165" SelectionChanged="CodecComboBox_SelectionChanged"/>
                         <ComboBox x:Name="ScreenCaptureMethodComboBox_Copy" HorizontalAlignment="Left" Margin="522,50,0,0" VerticalAlignment="Top" Width="165"/>
                         <ComboBox x:Name="BufferingComboBox_Copy" HorizontalAlignment="Left" Margin="522,94,0,0" VerticalAlignment="Top" Width="165"/>
                         <ComboBox x:Name="CompositionComboBox_Copy" HorizontalAlignment="Left" Margin="522,134,0,0" VerticalAlignment="Top" Width="165"/>
                         <ComboBox x:Name="FormatComboBox_Copy" HorizontalAlignment="Left" Margin="522,174,0,0" VerticalAlignment="Top" Width="165"/>
                         <ComboBox x:Name="FPSComboBox_Copy" HorizontalAlignment="Left" Margin="522,214,0,0" VerticalAlignment="Top" Width="165"/>
+                        <TabControl Name="CodecInfo" HorizontalAlignment="Left" Height="311" Margin="0,330,0,0" VerticalAlignment="Top" Width="783">
+                            <TabItem>
+                                <!-- Losless/LZ4 -->
+                                <Grid>
+                                    <ComboBox x:Name="LZ4BlockSizeComboBox" HorizontalAlignment="Left" Margin="240,10,0,0" VerticalAlignment="Top" Width="165"/>
+                                    <Label Content="Block size" HorizontalAlignment="Left" Margin="136,10,0,0" VerticalAlignment="Top"/>
+                                    <Label Content="Compression" HorizontalAlignment="Left" Margin="123,304,0,-34" VerticalAlignment="Top"/>
+                                    <ComboBox x:Name="CompressionComboBox_Copy" HorizontalAlignment="Left" Margin="245,304,0,-34" VerticalAlignment="Top" Width="165"/>
+                                </Grid>
+                            </TabItem>
+                            <TabItem>
+                                <Grid/>
+                            </TabItem>
+                        </TabControl>
                     </Grid>
+                    <ListBox HorizontalAlignment="Left" Height="249" Margin="128,194,0,0" VerticalAlignment="Top" Width="317">
+                        <Label Content="Label"/>
+                        <Label Content="Label"/>
+                    </ListBox>
                 </Grid>
             </TabItem>
             <TabItem Header=" Desktop Recording ">
@@ -56,7 +72,7 @@
             <Controls:Flyout Name="ConsoleFlyout" Position="Bottom" Height="300" IsOpen="False" CloseButtonVisibility="Collapsed" TitleVisibility="Collapsed" >
                 <Grid>
                     <TextBox Name="ConsoleInputText" Text="asd" Margin="-21,278,-4,-4" BorderThickness="0" PreviewKeyDown="ConsoleInputText_PreviewKeyDown"/>
-                    <TextBox Name="ConsoleText" TextWrapping="Wrap" Text="sd" Margin="-21,0,-4,20"/>
+                    <TextBox Name="ConsoleText" TextWrapping="Wrap" Text="sd" Margin="-21,0,-4,20" IsReadOnly="True"/>
                 </Grid>
             </Controls:Flyout>
         </Controls:FlyoutsControl>

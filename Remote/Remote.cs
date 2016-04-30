@@ -252,7 +252,7 @@ namespace Remote
 
 		public static class Remote
 		{
-			private static Settings settings;
+			/*private static Settings settings;*/
 			/*public static Settings settings
 			{
 				get
@@ -264,7 +264,7 @@ namespace Remote
 					setting = value;
 				}
 			}*/
-			public static Settings Settings
+			/*public static Settings Settings
 			{
 				get
 				{
@@ -274,7 +274,7 @@ namespace Remote
 				{
 					settings = value;
 				}
-			}
+			}*/
 		}
 	//}
 }

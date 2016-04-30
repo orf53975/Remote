@@ -71,12 +71,24 @@ namespace RemoteGUI
 			CodecComboBox.ItemsSource = losslessCodec;
 			LZ4BlockSizeComboBox.ItemsSource = LZ4BlockSizes;
 
+			ScreenCaptureMethodComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.screenCaptureMethod;
+			BufferingComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.frameBuffering;
+			CompositionComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.desktopComposition;
+			FormatComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.pixelFormat;
+			FPSComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.framesPerSecond;
+			CompressionComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.compression;
+			if(CompressionComboBox.SelectedIndex == 0)
+			{
+				CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.losslessCodec;
+			}
+			else CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.lossyCodec;
+			LZ4BlockSizeComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.LZ4BlockSize;
 
-			
-			Address.ItemsSource = Remote.Remote.Settings.addresses;
+
+			Address.ItemsSource = Settings.s.addresses;
 
 
-			server = new SOCKET.Server(Remote.Remote.Settings.remoteDesktopPort);
+			server = new SOCKET.Server(Settings.s.remoteDesktopPort);
 			server.Listen();
 			server.StartReceiveAsync(OnConnectionAccept);
 
@@ -145,6 +157,7 @@ namespace RemoteGUI
 				if (tempText != null)
 				{
 					ConsoleText.Text = tempText;
+					ConsoleText.CaretIndex = tempText.Length;
 					ConsoleText.ScrollToEnd();
 				}
 			}
@@ -302,25 +315,25 @@ namespace RemoteGUI
 		}
 		private void RemoveAddress_Click(object sender, RoutedEventArgs e)
 		{
-			if (Remote.Remote.Settings.addresses.Contains(Address.Text))
+			if (Settings.s.addresses.Contains(Address.Text))
 			{
-				Remote.Remote.Settings.addresses.Remove(Address.Text);
+				Settings.s.addresses.Remove(Address.Text);
 			}
 			Address.ItemsSource = null; //Without this the dropdown isn't updated, although autocompletion works, strange, maybe a bug in current Metro nuget
-			Address.ItemsSource = Remote.Remote.Settings.addresses;
+			Address.ItemsSource = Settings.s.addresses;
 		}
 		private void SaveAddress_Click(object sender, RoutedEventArgs e)
 		{
-			if(Remote.Remote.Settings.addresses.Contains(Address.Text))
+			if (Settings.s.addresses.Contains(Address.Text))
 			{
 				
 			}
 			else
 			{
-				Remote.Remote.Settings.addresses.Add(Address.Text);
+				Settings.s.addresses.Add(Address.Text);
 			}
 			Address.ItemsSource = null; //Without this the dropdown isn't updated, although autocompletion works, strange, maybe a bug in current Metro nuget
-			Address.ItemsSource = Remote.Remote.Settings.addresses;
+			Address.ItemsSource = Settings.s.addresses;
 		}
 		private void ConsoleInputText_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
@@ -339,6 +352,39 @@ namespace RemoteGUI
 		private void StatusBar_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
 			ConsoleFlyout.IsOpen = true;
+		}
+
+		private void CodecComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (compressions[CompressionComboBox.SelectedIndex] == "Lossless")
+			{
+				if (losslessCodec[Settings.s.remoteDesktopSettings.losslessCodec] == "LZ4")
+				{
+					CodecInfo.SelectedIndex = 0;
+				}
+			}
+			else
+			{
+				if (lossyCodec[Settings.s.remoteDesktopSettings.lossyCodec] == "ffmpeg")
+				{
+					CodecInfo.SelectedIndex = 1;
+				}
+			}
+		}
+
+		private void CompressionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (CompressionComboBox.SelectedIndex == 0)
+			{
+				CodecComboBox.ItemsSource = losslessCodec;
+				CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.losslessCodec;
+			}
+			else
+			{
+				CodecComboBox.ItemsSource = lossyCodec;
+				CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.lossyCodec;
+			}
+			//CodecComboBox_SelectionChanged(null, null); //useless here, changes made to the ItemsSource will trigger SelectionChanged method
 		}
 	}
 }
