@@ -37,6 +37,10 @@ namespace RemoteGUI
 		public static string[] lossyCodec = new string[] { "ffmpeg" };
 		public static string[] LZ4BlockSizes = new string[] { "32kb", "64kb", "128kb", "256kb", "512kb", "Max" };
 
+		public List<string> serverConnectedComputerNames;
+		public List<SOCKET.Client> serverConnectedComputers;
+		public bool serverEmpty = true;
+
 		SOCKET.Server server;
 		SOCKET.Client client;
 		ConsoleWriter cw = new ConsoleWriter(1000);
@@ -84,13 +88,23 @@ namespace RemoteGUI
 			else CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.lossyCodec;
 			LZ4BlockSizeComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.LZ4BlockSize;
 
-
 			Address.ItemsSource = Settings.s.addresses;
 
+			if (Settings.s.startServer)
+			{
+				server = new SOCKET.Server(Settings.s.remoteDesktopPort);
+				server.Listen();
+				server.StartReceiveAsync(OnConnectionAccept);
+				ServerStartButton.Content = "Stop Server";
+			}
+			else
+			{
+				server = new SOCKET.Server(Settings.s.remoteDesktopPort);
+				server.Close();
+				ServerStartButton.Content = "Start Server";
+			}
+			
 
-			server = new SOCKET.Server(Settings.s.remoteDesktopPort);
-			server.Listen();
-			server.StartReceiveAsync(OnConnectionAccept);
 
 
 
@@ -385,6 +399,30 @@ namespace RemoteGUI
 				CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.lossyCodec;
 			}
 			//CodecComboBox_SelectionChanged(null, null); //useless here, changes made to the ItemsSource will trigger SelectionChanged method
+		}
+
+		private void ServerDisconnectButton_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void ServerStartButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (server.socket != null)
+			{
+				server.Close();
+				ServerStartButton.Content = "Start Server";
+			}
+			else
+			{
+				server = new SOCKET.Server(Settings.s.remoteDesktopPort);
+				if (server.Listen())
+				{
+					server.StartReceiveAsync(OnConnectionAccept);
+					ServerStartButton.Content = "Stop Server";
+
+				}
+			}
 		}
 	}
 }

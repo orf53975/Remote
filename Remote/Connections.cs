@@ -30,6 +30,11 @@ namespace Remote
 				ipEndPoint = new IPEndPoint(ipAddress, port);
 				socket = new Socket(ipEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 			}
+			public void Close()
+			{
+				socket.Close();
+				socket = null;
+			}
 			public bool Listen()
 			{
 				try

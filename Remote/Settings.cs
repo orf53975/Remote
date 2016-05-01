@@ -19,7 +19,8 @@ namespace Remote
 		public List<string> addresses = new List<string>(10); //Saved addresses
 		[ProtoBuf.ProtoMember(3)]
 		public RemoteDesktopSettings remoteDesktopSettings = new RemoteDesktopSettings(); //
-
+		[ProtoBuf.ProtoMember(4)]
+		public bool startServer;
 
 		[ProtoBuf.ProtoContract(SkipConstructor = true)]
 		public class RemoteDesktopSettings

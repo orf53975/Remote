@@ -9,12 +9,28 @@
         <TabControl>
             <TabItem Header=" Remote Desktop ">
                 <Grid>
-                    <Button Name="Connect" Content="Connect" HorizontalAlignment="Left" Margin="370,130,0,0" VerticalAlignment="Top" Width="75" Click="Connect_Click" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1"/>
+                    <Label Content="Server" HorizontalAlignment="Left" Margin="42,10,0,0" VerticalAlignment="Top"/>
+                    <ComboBox Name="ServerConnectedComputers" HorizontalAlignment="Left" Margin="128,10,0,0" VerticalAlignment="Top" Width="317"/>
+                    <Button Name="ServerDisconnectButton"  Content="Disconnect" HorizontalAlignment="Left" Margin="370,53,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="ServerDisconnectButton_Click"/>
+                    <Button Name="ServerStartButton" Content="Start Server" HorizontalAlignment="Left" Margin="128,53,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="ServerStartButton_Click"/>
 
-                    <ComboBox Name="Address" HorizontalAlignment="Left" Margin="128,80,0,0" VerticalAlignment="Top" Width="317" IsEditable="True"/>
-                    <Label Content="Address" HorizontalAlignment="Left" Margin="20,80,0,0" VerticalAlignment="Top"/>
-                    <Button Name="RemoveAddress" Content="Remove" HorizontalAlignment="Left" Margin="249,130,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="RemoveAddress_Click"/>
-                    <Button Name="SaveAddress" Content="Save" HorizontalAlignment="Left" Margin="128,130,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="SaveAddress_Click"/>
+                    <Button Name="Connect" Content="Connect" HorizontalAlignment="Left" Margin="370,186,0,0" VerticalAlignment="Top" Width="75" Click="Connect_Click" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1"/>
+
+                    <ComboBox Name="Address" HorizontalAlignment="Left" Margin="128,136,0,0" VerticalAlignment="Top" Width="317" IsEditable="True"/>
+                    <Label Content="Address" HorizontalAlignment="Left" Margin="32,136,0,0" VerticalAlignment="Top"/>
+                    <Button Name="RemoveAddress" Content="Remove" HorizontalAlignment="Left" Margin="249,186,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="RemoveAddress_Click"/>
+                    <Button Name="SaveAddress" Content="Save" HorizontalAlignment="Left" Margin="128,186,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="SaveAddress_Click"/>
+
+                    <ListBox Name="ConnectedComputers" HorizontalAlignment="Left" Height="80" Margin="32,250,0,0" VerticalAlignment="Top" Width="413" BorderThickness="1">
+                        <Label Content="Sajt"/>
+                        <Label Content="Sajt"/>
+                        <Label Content="Sajt"/>
+                        <StackPanel Height="26">
+                            <Label Content="Label"/>
+                        </StackPanel>
+
+                    </ListBox>
+
                     <Grid Margin="479,0,0,0">
                         <ComboBox Name="ScreenCaptureMethodComboBox" HorizontalAlignment="Left" Margin="245,50,0,0" VerticalAlignment="Top" Width="165"/>
                         <Label Content="Scren capture method" HorizontalAlignment="Left" Margin="75,50,0,0" VerticalAlignment="Top"/>
@@ -52,10 +68,7 @@
                             </TabItem>
                         </TabControl>
                     </Grid>
-                    <ListBox HorizontalAlignment="Left" Height="249" Margin="128,194,0,0" VerticalAlignment="Top" Width="317">
-                        <Label Content="Label"/>
-                        <Label Content="Label"/>
-                    </ListBox>
+                    
                 </Grid>
             </TabItem>
             <TabItem Header=" Desktop Recording ">
