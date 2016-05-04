@@ -5,7 +5,7 @@
         Title="MainWindow" Height="720" Width="1280" WindowStartupLocation="CenterScreen"
                       WindowTransitionsEnabled="False">
     <Grid>
-        <Label Name="FPS" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="799,327,0,0"/>
+        <!--<Label Name="FPS" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="799,327,0,0"/>-->
         <TabControl>
             <TabItem Header=" Remote Desktop ">
                 <Grid>
@@ -81,11 +81,11 @@
         <StatusBar Height="22" VerticalAlignment="Bottom" Background="{DynamicResource GrayBrush9}" MouseLeftButtonUp="StatusBar_MouseLeftButtonUp">
             <TextBlock Name="ConsoleQuickText" TextWrapping="Wrap" Text=""/>
         </StatusBar>
-        <Controls:FlyoutsControl Name="FlyoutsControlAll" Visibility="Hidden">
+        <Controls:FlyoutsControl Name="FlyoutsControlAll" Visibility="Hidden" Focusable="False">
             <Controls:Flyout Name="ConsoleFlyout" Position="Bottom" Height="300" IsOpen="False" CloseButtonVisibility="Collapsed" TitleVisibility="Collapsed" >
                 <Grid>
-                    <TextBox Name="ConsoleInputText" Text="asd" Margin="-21,278,-4,-4" BorderThickness="0" PreviewKeyDown="ConsoleInputText_PreviewKeyDown"/>
-                    <TextBox Name="ConsoleText" TextWrapping="Wrap" Text="sd" Margin="-21,0,-4,20" IsReadOnly="True"/>
+                    <TextBox Name="ConsoleInputText" Text="" Margin="-21,278,-4,-4" BorderThickness="0" PreviewKeyDown="ConsoleInputText_PreviewKeyDown"/>
+                    <TextBox Name="ConsoleText" TextWrapping="Wrap" Text="" Margin="-21,0,-4,20" IsReadOnly="True"/>
                 </Grid>
             </Controls:Flyout>
         </Controls:FlyoutsControl>
