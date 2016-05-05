@@ -21,6 +21,8 @@ namespace Remote
 		public RemoteDesktopSettings remoteDesktopSettings = new RemoteDesktopSettings(); //
 		[ProtoBuf.ProtoMember(4)]
 		public bool startServer;
+		[ProtoBuf.ProtoMember(5)]
+		public string language;
 
 		[ProtoBuf.ProtoContract(SkipConstructor = true)]
 		public class RemoteDesktopSettings
@@ -59,6 +61,7 @@ namespace Remote
 			}
 			return new ErrorCode { error = false };
 		}
+		[Startup]
 		public static ErrorCode Load()
 		{
 			if (File.Exists("settings.set"))

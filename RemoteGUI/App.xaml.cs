@@ -16,9 +16,10 @@ namespace RemoteGUI
 	{
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
+			Remote.Startup.Load();
 			if (e.Args.Length == 0) //nincs parancs, normális indítás
 			{
-				Settings.Load();
+				//Settings.Load(); //No longer needed
 				MainWindow mw = new MainWindow();
 				mw.Show();
 			}
