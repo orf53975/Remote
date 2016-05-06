@@ -1,4 +1,4 @@
-﻿# Server
+﻿# Labels
 RemoteGUI.MainWindow.lServer.Content = Szerver
 RemoteGUI.MainWindow.lAddress.Content = Cím
 RemoteGUI.MainWindow.lScreenCaptureMethod.Content = Felvételi mód

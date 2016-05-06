@@ -28,6 +28,30 @@ namespace Remote
 				}
 			}
 		}
+		/// <summary>
+		///	Invokes every method that has the StartupAttribute. It will call the parameter method each time to update text
+		/// </summary>
+		public static void Load(Action<string> action)
+		{
+			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+			{
+				foreach (Type type in assembly.GetTypes())
+				{
+					foreach (MethodInfo mi in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+					{
+						StartupAttribute sa = (StartupAttribute)mi.GetCustomAttribute(typeof(StartupAttribute));
+						if (sa != null)
+						{
+							if(sa.Text != null)
+							{
+								action(sa.Text);
+							}
+							mi.Invoke(null, null);
+						}
+					}
+				}
+			}
+		}
 	}
 	/// <summary>
 	/// Registers the method for invocation for the Startup.Load() method
@@ -35,9 +59,14 @@ namespace Remote
 	[AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
 	sealed class StartupAttribute : Attribute
 	{
-		public StartupAttribute()
+		private string text;
+		public StartupAttribute(string text)
 		{
-			
+			this.text = text;
+		}
+		public string Text
+		{
+			get { return text; }
 		}
 	}
 }

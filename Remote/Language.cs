@@ -13,7 +13,7 @@ namespace Remote
 	public static class Language
 	{
 		private static Dictionary<string, string> dictionary = new Dictionary<string,string>();
-		[Startup]
+		[Startup("Loading language...")]
 		private static void Load()
 		{
 			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -68,8 +68,8 @@ namespace Remote
 		{
 			List<string> list = new List<string>(6); //6 should be enough
 			StringBuilder sb = new StringBuilder(100); //should be enough => "qwertzuiopasdfghjklyxcvbnm" thats only 26! even if its not enough, just reallocate
-				
-				
+
+
 			var memberExp = memberExpression.Body as MemberExpression;
 			while (memberExp != null)
 			{

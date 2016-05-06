@@ -104,6 +104,7 @@ namespace RemoteGUI
 				server.Close();
 				ServerStartButton.Content = "Start Server";
 			}
+			
 
 			//lServer.Content = Remote.Language.Find(() => lServer.Content, this, "Server");
 			//cw.WriteLine(lServer.Name);
@@ -133,7 +134,7 @@ namespace RemoteGUI
 		void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
 
-			// Load non english language
+			/*// Load non english language
 			foreach (var item in FindVisualChildren<Label>(this))
 			{
 				// If it's empty, just ignore
@@ -146,7 +147,7 @@ namespace RemoteGUI
 					}
 				}
 				//else cw.WriteLine("error <-----------");
-			}
+			}*/
 			
 		}
 

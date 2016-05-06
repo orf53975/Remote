@@ -14,13 +14,21 @@ namespace RemoteGUI
 	/// </summary>
 	public partial class App : Application
 	{
+		Action empty = delegate { };
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
-			Remote.Startup.Load();
+			RemoteGuiLoader.MainWindow loader = new RemoteGuiLoader.MainWindow();
+			Action<string> action = loader.ChangeText;
+			loader.Show();
+			loader.ChangeText("Loading...");
+			//loader.Dispatcher.Invoke(new Action(() => loader.ChangeText(a)), System.Windows.Threading.DispatcherPriority.Render);
+			Remote.Startup.Load(loader.ChangeText);
+			loader.ChangeText("Loading Window");
 			if (e.Args.Length == 0) //nincs parancs, normális indítás
 			{
 				//Settings.Load(); //No longer needed
 				MainWindow mw = new MainWindow();
+				loader.Close();
 				mw.Show();
 			}
 			else if (e.Args.Length == 2)

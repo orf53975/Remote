@@ -1,0 +1,8 @@
+﻿<Window x:Class="RemoteGuiLoader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Remote" Height="270" Width="480" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None">
+    <Grid>
+        <Label Name="ProgressText" Content="Label" HorizontalAlignment="Left" Margin="10,234,0,0" VerticalAlignment="Top"/>
+    </Grid>
+</Window>
