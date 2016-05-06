@@ -9,7 +9,7 @@
         <TabControl>
             <TabItem Header=" Remote Desktop ">
                 <Grid>
-                    <Label Content="Server" HorizontalAlignment="Left" Margin="42,10,0,0" VerticalAlignment="Top"/>
+                    <Label Name="lServer" Content="Server" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" Width="75"/>
                     <ComboBox Name="ServerConnectedComputers" HorizontalAlignment="Left" Margin="128,10,0,0" VerticalAlignment="Top" Width="317"/>
                     <Button Name="ServerDisconnectButton"  Content="Disconnect" HorizontalAlignment="Left" Margin="370,53,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="ServerDisconnectButton_Click"/>
                     <Button Name="ServerStartButton" Content="Start Server" HorizontalAlignment="Left" Margin="128,53,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="ServerStartButton_Click"/>
@@ -17,7 +17,7 @@
                     <Button Name="Connect" Content="Connect" HorizontalAlignment="Left" Margin="370,186,0,0" VerticalAlignment="Top" Width="75" Click="Connect_Click" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1"/>
 
                     <ComboBox Name="Address" HorizontalAlignment="Left" Margin="128,136,0,0" VerticalAlignment="Top" Width="317" IsEditable="True"/>
-                    <Label Content="Address" HorizontalAlignment="Left" Margin="32,136,0,0" VerticalAlignment="Top"/>
+                    <Label Name="lAddress" Content="Address" HorizontalAlignment="Left" Margin="10,136,0,0" VerticalAlignment="Top" Width="75" HorizontalContentAlignment="Right"/>
                     <Button Name="RemoveAddress" Content="Remove" HorizontalAlignment="Left" Margin="249,186,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="RemoveAddress_Click"/>
                     <Button Name="SaveAddress" Content="Save" HorizontalAlignment="Left" Margin="128,186,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="SaveAddress_Click"/>
 
@@ -33,20 +33,20 @@
 
                     <Grid Margin="479,0,0,0">
                         <ComboBox Name="ScreenCaptureMethodComboBox" HorizontalAlignment="Left" Margin="245,50,0,0" VerticalAlignment="Top" Width="165"/>
-                        <Label Content="Scren capture method" HorizontalAlignment="Left" Margin="75,50,0,0" VerticalAlignment="Top"/>
-                        <Label Content="Buffering" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="144,94,0,0"/>
-                        <Label Content="Copmosition" HorizontalAlignment="Left" Margin="124,134,0,0" VerticalAlignment="Top"/>
-                        <Label Content="Format" HorizontalAlignment="Left" Margin="154,174,0,0" VerticalAlignment="Top"/>
-                        <Label Content="Frames per seconds (FPS)" HorizontalAlignment="Left" Margin="58,214,0,0" VerticalAlignment="Top"/>
+                        <Label Name="lScreenCaptureMethod" Content="Scren capture method" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="192" HorizontalContentAlignment="Right"/>
+                        <Label Name="lBuffering" Content="Buffering" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,94,0,0" Width="192" HorizontalContentAlignment="Right"/>
+                        <Label Name="lCopmosition" Content="Copmosition" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top" Width="192" HorizontalContentAlignment="Right"/>
+                        <Label Name="lFormat" Content="Format" HorizontalAlignment="Left" Margin="10,174,0,0" VerticalAlignment="Top" Width="192" HorizontalContentAlignment="Right"/>
+                        <Label Name="lFframesPerSeconds" Content="Frames per seconds (FPS)" HorizontalAlignment="Left" Margin="10,214,0,0" VerticalAlignment="Top" Width="192" HorizontalContentAlignment="Right"/>
                         <ComboBox Name="BufferingComboBox" HorizontalAlignment="Left" Margin="245,94,0,0" VerticalAlignment="Top" Width="165"/>
                         <ComboBox Name="CompositionComboBox" HorizontalAlignment="Left" Margin="245,134,0,0" VerticalAlignment="Top" Width="165"/>
                         <ComboBox Name="FormatComboBox" HorizontalAlignment="Left" Margin="245,174,0,0" VerticalAlignment="Top" Width="165"/>
                         <ComboBox Name="FPSComboBox" HorizontalAlignment="Left" Margin="245,214,0,0" VerticalAlignment="Top" Width="165"/>
-                        <Label Content="Desktop" HorizontalAlignment="Left" Margin="214,10,0,0" VerticalAlignment="Top"/>
-                        <Label Content="Direct3D" HorizontalAlignment="Left" Margin="664,10,0,0" VerticalAlignment="Top"/>
-                        <Label Content="Compression" HorizontalAlignment="Left" Margin="123,304,0,0" VerticalAlignment="Top"/>
+                        <Label Name="lDesktop" Content="Desktop" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Width="410"/>
+                        <Label Name="lDirect3D" Content="Direct3D" HorizontalAlignment="Left" Margin="522,10,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Width="165"/>
+                        <Label Name="lCompression" Content="Compression" HorizontalAlignment="Left" Margin="10,304,0,0" VerticalAlignment="Top" Width="192" HorizontalContentAlignment="Right"/>
                         <ComboBox Name="CompressionComboBox" HorizontalAlignment="Left" Margin="245,304,0,0" VerticalAlignment="Top" Width="165" SelectionChanged="CompressionComboBox_SelectionChanged"/>
-                        <Label Content="Codec" HorizontalAlignment="Left" Margin="444,304,0,0" VerticalAlignment="Top"/>
+                        <Label Name="lCodec" Content="Codec" HorizontalAlignment="Left" Margin="444,304,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right"/>
                         <ComboBox Name="CodecComboBox" HorizontalAlignment="Left" Margin="522,304,0,0" VerticalAlignment="Top" Width="165" SelectionChanged="CodecComboBox_SelectionChanged"/>
                         <ComboBox x:Name="ScreenCaptureMethodComboBox_Copy" HorizontalAlignment="Left" Margin="522,50,0,0" VerticalAlignment="Top" Width="165"/>
                         <ComboBox x:Name="BufferingComboBox_Copy" HorizontalAlignment="Left" Margin="522,94,0,0" VerticalAlignment="Top" Width="165"/>
@@ -58,7 +58,7 @@
                                 <!-- Losless/LZ4 -->
                                 <Grid>
                                     <ComboBox x:Name="LZ4BlockSizeComboBox" HorizontalAlignment="Left" Margin="240,10,0,0" VerticalAlignment="Top" Width="165"/>
-                                    <Label Content="Block size" HorizontalAlignment="Left" Margin="136,10,0,0" VerticalAlignment="Top"/>
+                                    <Label Name="lBlockSize" Content="Block size" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="187" HorizontalContentAlignment="Right"/>
                                     <Label Content="Compression" HorizontalAlignment="Left" Margin="123,304,0,-34" VerticalAlignment="Top"/>
                                     <ComboBox x:Name="CompressionComboBox_Copy" HorizontalAlignment="Left" Margin="245,304,0,-34" VerticalAlignment="Top" Width="165"/>
                                 </Grid>
@@ -68,7 +68,7 @@
                             </TabItem>
                         </TabControl>
                     </Grid>
-                    
+
                 </Grid>
             </TabItem>
             <TabItem Header=" Desktop Recording ">

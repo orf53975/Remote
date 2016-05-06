@@ -63,6 +63,7 @@ namespace RemoteGUI
 		{
 
 			InitializeComponent();
+			Loaded += MainWindow_Loaded;
 
 			FlyoutsControlAll.Visibility = System.Windows.Visibility.Visible;
 
@@ -103,11 +104,9 @@ namespace RemoteGUI
 				server.Close();
 				ServerStartButton.Content = "Start Server";
 			}
-			
 
-
-
-
+			//lServer.Content = Remote.Language.Find(() => lServer.Content, this, "Server");
+			//cw.WriteLine(lServer.Name);
 
 			//Screen.EnableComposition(false);
 			sw = new Stopwatch();
@@ -130,6 +129,27 @@ namespace RemoteGUI
 			thread2.Start();*/
 
 		}
+
+		void MainWindow_Loaded(object sender, RoutedEventArgs e)
+		{
+
+			// Load non english language
+			foreach (var item in FindVisualChildren<Label>(this))
+			{
+				// If it's empty, just ignore
+				if (item.Content != null)
+				{
+					if (item.Name != "")
+					{
+						item.Content = Remote.Language.Find(item.Name + ".Content", this) ?? item.Content; // Find text for the given element
+						//cw.WriteLine(Remote.Language.Find(item.Name + ".Content", this));
+					}
+				}
+				//else cw.WriteLine("error <-----------");
+			}
+			
+		}
+
 		private bool OnConnectionAccept(System.Net.Sockets.SocketAsyncEventArgs arg)
 		{
 			return false;
@@ -157,8 +177,10 @@ namespace RemoteGUI
 		}*/
 		void dt_Tick(object sender, EventArgs e)
 		{
-			FPS.Content = sajt;
-			cw.WriteLine(Environment.TickCount.ToString());
+			//FPS.Content = sajt;
+			//cw.WriteLine(Environment.TickCount.ToString());
+			
+			
 			/*cw.WriteLine(Environment.TickCount.ToString());
 			ConsoleQuickText.Text = cw.GetLastLine();
 			ConsoleText.Text = cw.Update();
@@ -358,6 +380,7 @@ namespace RemoteGUI
 			}
 			else if (e.Key == Key.Escape)
 			{
+				//Keyboard.ClearFocus();
 				e.Handled = true;
 				ConsoleFlyout.IsOpen = false;
 			}
@@ -421,6 +444,28 @@ namespace RemoteGUI
 					server.StartReceiveAsync(OnConnectionAccept);
 					ServerStartButton.Content = "Stop Server";
 
+				}
+			}
+			
+			//cw.WriteLine(Remote.Language.Find(() => ServerStartButton.Content, this, ""));
+		}
+		//Based on: http://stackoverflow.com/questions/974598/find-all-controls-in-wpf-window-by-type
+		public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+		{
+			if (depObj != null)
+			{
+				for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+				{
+					DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+					if (child != null && child is T)
+					{
+						yield return (T)child;
+					}
+
+					foreach (T childOfChild in FindVisualChildren<T>(child))
+					{
+						yield return childOfChild;
+					}
 				}
 			}
 		}

@@ -1,0 +1,13 @@
+﻿# Server
+RemoteGUI.MainWindow.lServer.Content = Szerver
+RemoteGUI.MainWindow.lAddress.Content = Cím
+RemoteGUI.MainWindow.lScreenCaptureMethod.Content = Felvételi mód
+RemoteGUI.MainWindow.lBuffering.Content = Bufferelés
+RemoteGUI.MainWindow.lCopmosition.Content = Asztal kompozíció
+RemoteGUI.MainWindow.lFormat.Content = Formátum
+RemoteGUI.MainWindow.lFframesPerSeconds.Content = Képek száma másodpercenként
+RemoteGUI.MainWindow.lDesktop.Content = Asztal
+RemoteGUI.MainWindow.lDirect3D.Content = 3D
+RemoteGUI.MainWindow.lCompression.Content = Tömörítés
+RemoteGUI.MainWindow.lCodec.Content = Kodek
+RemoteGUI.MainWindow.lBlockSize.Content = Tömörítési block méret
