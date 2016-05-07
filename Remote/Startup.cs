@@ -33,6 +33,7 @@ namespace Remote
 		/// </summary>
 		public static void Load(Action<string> action)
 		{
+			SortedDictionary<int, Queue<MethodInfo>> dic = new SortedDictionary<int, Queue<MethodInfo>>();
 			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 			{
 				foreach (Type type in assembly.GetTypes())
@@ -42,13 +43,34 @@ namespace Remote
 						StartupAttribute sa = (StartupAttribute)mi.GetCustomAttribute(typeof(StartupAttribute));
 						if (sa != null)
 						{
-							if(sa.Text != null)
+							if (dic.ContainsKey(sa.Priority))
 							{
-								action(sa.Text);
+								dic[sa.Priority].Enqueue(mi);
 							}
-							mi.Invoke(null, null);
+							else
+							{
+								dic[sa.Priority] = new Queue<MethodInfo>();
+								dic[sa.Priority].Enqueue(mi);
+							}
 						}
 					}
+				}
+			}
+			foreach (Queue<MethodInfo> item in dic.Values)
+			{
+				foreach (MethodInfo mi in item)
+				{
+					StartupAttribute sa = (StartupAttribute)mi.GetCustomAttribute(typeof(StartupAttribute));
+					// Should always be true, as we dont add an item if this was null before
+					if (sa != null)
+					{
+						if(sa.Text != null)
+						{
+							action(sa.Text);
+						}
+						mi.Invoke(null, null);
+					}
+
 				}
 			}
 		}
@@ -57,9 +79,10 @@ namespace Remote
 	/// Registers the method for invocation for the Startup.Load() method
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-	sealed class StartupAttribute : Attribute
+	public sealed class StartupAttribute : Attribute
 	{
 		private string text;
+		private int priority = int.MaxValue;
 		public StartupAttribute(string text)
 		{
 			this.text = text;
@@ -67,6 +90,11 @@ namespace Remote
 		public string Text
 		{
 			get { return text; }
+		}
+		public int Priority
+		{
+			get { return priority; }
+			set { priority = value; }
 		}
 	}
 }

@@ -61,7 +61,7 @@ namespace Remote
 			}
 			return new ErrorCode { error = false };
 		}
-		[Startup("Loading settings...")]
+		[Startup("Loading settings...", Priority=0)]
 		public static ErrorCode Load()
 		{
 			if (File.Exists("settings.set"))
