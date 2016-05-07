@@ -156,6 +156,7 @@ namespace RemoteGUI
 				{
 					// Not really important to exclude nav and PART_XXX, as we just reassign the contents.
 					// This is because they dont have language files.
+					// Note: ServerStartButton uses conditions, so this call would throw an exception
 					if (item.Name != "" && item.Name != "nav" && !item.Name.Contains("PART") && item.Name != "ServerStartButton")
 					{
 						item.Content = Remote.Language.Find(item.Name + ".Content", this) ?? item.Content;

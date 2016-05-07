@@ -64,7 +64,7 @@ namespace Remote
 		{
 			changed = true;
 			lastLine = String.Format(s, o);
-			Append(s);
+			Append(lastLine);
 			Append("\n");
 		}
 		public string Update()
