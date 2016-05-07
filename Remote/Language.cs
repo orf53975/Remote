@@ -265,6 +265,29 @@ namespace Remote
 				return null;
 			}
 		}
+		public static string Find(string name, object o, string original, [CallerMemberName]string method = "")
+		{
+			StringBuilder sb = new StringBuilder(100);
+			sb.Append(o.GetType().Namespace);
+			sb.Append('.');
+			sb.Append(o.GetType().Name);
+			sb.Append('.');
+			sb.Append(method);
+			sb.Append('.');
+			sb.Append(name);
+
+			//return sb.ToString();
+
+			LanguageEntry temp;
+			if (dictionary.TryGetValue(sb.ToString(), out temp))
+			{
+				return temp[null];
+			}
+			else
+			{
+				return original;
+			}
+		}
 		private class LanguageEntry
 		{
 			public Dictionary<string, string> dictionary;

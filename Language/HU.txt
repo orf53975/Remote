@@ -11,6 +11,7 @@ RemoteGUI.MainWindow.lDirect3D.Content = 3D
 RemoteGUI.MainWindow.lCompression.Content = Tömörítés
 RemoteGUI.MainWindow.lCodec.Content = Kodek
 RemoteGUI.MainWindow.lBlockSize.Content = Tömörítési block méret
+RemoteGUI.MainWindow.lAddressConnected.Content = Cím
 
 # Buttons
 RemoteGUI.MainWindow.ServerStartButton.Content =>
@@ -32,3 +33,7 @@ RemoteGUI.MainWindow.CompositionComboBox.ItemsSource => ()
 RemoteGUI.MainWindow.CompressionComboBox.ItemsSource => ()
 		Veszteség mentes => Veszteséges
 		() => end
+
+# Console
+RemoteGUI.MainWindow.Connect_Click.ClientNotNull = Egy kapcsolat már él!
+RemoteGUI.MainWindow.Connect_Click.ClientConnected = Sikeresen csatlakozva a következő címhez: {0}
