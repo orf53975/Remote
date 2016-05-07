@@ -21,13 +21,8 @@
                     <Button Name="RemoveAddress" Content="Remove" HorizontalAlignment="Left" Margin="249,186,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="RemoveAddress_Click"/>
                     <Button Name="SaveAddress" Content="Save" HorizontalAlignment="Left" Margin="128,186,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="SaveAddress_Click"/>
 
-                    <ListBox Name="ConnectedComputers" HorizontalAlignment="Left" Height="80" Margin="32,250,0,0" VerticalAlignment="Top" Width="413" BorderThickness="1">
-                        <Label Content="Sajt"/>
-                        <Label Content="Sajt"/>
-                        <Label Content="Sajt"/>
-                        <StackPanel Height="26">
-                            <Label Content="Label"/>
-                        </StackPanel>
+                    <ListBox Name="ConnectedComputers" HorizontalAlignment="Left" Height="80" Margin="32,250,0,0" VerticalAlignment="Top" Width="413" BorderThickness="1" SelectionChanged="ConnectedComputers_SelectionChanged">
+
 
                     </ListBox>
 
@@ -54,7 +49,7 @@
                         <ComboBox x:Name="FormatComboBox_Copy" HorizontalAlignment="Left" Margin="522,174,0,0" VerticalAlignment="Top" Width="165"/>
                         <ComboBox x:Name="FPSComboBox_Copy" HorizontalAlignment="Left" Margin="522,214,0,0" VerticalAlignment="Top" Width="165"/>
                         <TabControl Name="CodecInfo" HorizontalAlignment="Left" Height="311" Margin="0,330,0,0" VerticalAlignment="Top" Width="783">
-                            <TabItem>
+                            <TabItem IsEnabled="False">
                                 <!-- Losless/LZ4 -->
                                 <Grid>
                                     <ComboBox x:Name="LZ4BlockSizeComboBox" HorizontalAlignment="Left" Margin="240,10,0,0" VerticalAlignment="Top" Width="165"/>
@@ -63,10 +58,16 @@
                                     <ComboBox x:Name="CompressionComboBox_Copy" HorizontalAlignment="Left" Margin="245,304,0,-34" VerticalAlignment="Top" Width="165"/>
                                 </Grid>
                             </TabItem>
-                            <TabItem>
+                            <TabItem IsEnabled="False">
                                 <Grid/>
                             </TabItem>
                         </TabControl>
+                    </Grid>
+                    <Grid Name="ConnectedInfo" HorizontalAlignment="Left" Height="250" Margin="32,344,0,0" VerticalAlignment="Top" Width="413" >
+                        <Border BorderThickness="1" BorderBrush="White"></Border>
+                        <Label Name="lAddressConnected" Content="Address" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="60"/>
+                        <Label Name="AddressConnected" Content="" HorizontalAlignment="Left" Margin="83,10,0,0" VerticalAlignment="Top" Width="320"/>
+                        <Button Name="RemoteDesktopConnectButton" Content="Connect" HorizontalAlignment="Left" Margin="328,41,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="RemoteDesktopConnectButton_Click"/>
                     </Grid>
 
                 </Grid>
@@ -81,13 +82,31 @@
         <StatusBar Height="22" VerticalAlignment="Bottom" Background="{DynamicResource GrayBrush9}" MouseLeftButtonUp="StatusBar_MouseLeftButtonUp">
             <TextBlock Name="ConsoleQuickText" TextWrapping="Wrap" Text=""/>
         </StatusBar>
-        <Controls:FlyoutsControl Name="FlyoutsControlAll" Visibility="Hidden" Focusable="False">
+        <Controls:FlyoutsControl Name="FlyoutsControlAll" Visibility="Visible" Focusable="False">
             <Controls:Flyout Name="ConsoleFlyout" Position="Bottom" Height="300" IsOpen="False" CloseButtonVisibility="Collapsed" TitleVisibility="Collapsed" >
                 <Grid>
                     <TextBox Name="ConsoleInputText" Text="" Margin="-21,278,-4,-4" BorderThickness="0" PreviewKeyDown="ConsoleInputText_PreviewKeyDown"/>
                     <TextBox Name="ConsoleText" TextWrapping="Wrap" Text="" Margin="-21,0,-4,20" IsReadOnly="True"/>
                 </Grid>
             </Controls:Flyout>
+            <Controls:Flyout Name="SettingsFlyout" Position="Top" Height="300" IsOpen="True" CloseButtonVisibility="Collapsed" TitleVisibility="Collapsed">
+                <Grid>
+                    <Grid Margin="-20,0,0,0">
+                        <Label Name="lUserName" Content="Name" HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" Width="47" HorizontalContentAlignment="Right"/>
+                        <TextBox Name="UserNameTextBox" HorizontalAlignment="Left" Height="23" Margin="86,20,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" TextChanged="UserNameTextBox_TextChanged"/>
+                        <Label Content="Port" HorizontalAlignment="Left" Margin="319,20,0,0" VerticalAlignment="Top" Width="47" HorizontalContentAlignment="Right"/>
+                        <TextBox Name="PortTextBox" HorizontalAlignment="Left" Height="23" Margin="386,20,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" TextChanged="PortTextBox_TextChanged"/>
+                        <Label Content="Auto start server" HorizontalAlignment="Left" Margin="222,68,0,0" VerticalAlignment="Top" Width="144" HorizontalContentAlignment="Right"/>
+                        <ComboBox Name="AutoStartServerComboBox" HorizontalAlignment="Left" Margin="386,68,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="AutoStartServerComboBox_SelectionChanged"/>
+
+                    </Grid>
+                </Grid>
+            </Controls:Flyout>
         </Controls:FlyoutsControl>
     </Grid>
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <ToggleButton Name="bSettings" Content="Settings" Click="bSettings_Click"/>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
 </Controls:MetroWindow>

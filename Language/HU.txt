@@ -12,6 +12,7 @@ RemoteGUI.MainWindow.lCompression.Content = Tömörítés
 RemoteGUI.MainWindow.lCodec.Content = Kodek
 RemoteGUI.MainWindow.lBlockSize.Content = Tömörítési block méret
 RemoteGUI.MainWindow.lAddressConnected.Content = Cím
+RemoteGUI.MainWindow.lUserName.Content = Név
 
 # Buttons
 RemoteGUI.MainWindow.ServerStartButton.Content =>
@@ -22,6 +23,7 @@ RemoteGUI.MainWindow.SaveAddress.Content = Mentés
 RemoteGUI.MainWindow.RemoveAddress.Content = Törlés
 RemoteGUI.MainWindow.Connect.Content = Csatlakozás
 RemoteGUI.MainWindow.ServerDisconnectButton.Content = Lekapcsolás
+RemoteGUI.MainWindow.bSettings.Content = Beállítások
 
 # Arrays
 RemoteGUI.MainWindow.BufferingComboBox.ItemsSource => ()
@@ -32,6 +34,9 @@ RemoteGUI.MainWindow.CompositionComboBox.ItemsSource => ()
 		() => end
 RemoteGUI.MainWindow.CompressionComboBox.ItemsSource => ()
 		Veszteség mentes => Veszteséges
+		() => end
+RemoteGUI.MainWindow.AutoStartServerComboBox.ItemsSource => ()
+		Kikapcsolva => Bekapcsolva
 		() => end
 
 # Console

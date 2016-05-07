@@ -66,7 +66,8 @@ namespace RemoteGUI
 			Loaded += MainWindow_Loaded;
 
 			FlyoutsControlAll.Visibility = System.Windows.Visibility.Visible;
-
+			ConnectedInfo.Visibility = System.Windows.Visibility.Hidden;
+			
 			ScreenCaptureMethodComboBox.ItemsSource = screenCaptureMethods;
 			BufferingComboBox.ItemsSource = Remote.Language.Find(() => BufferingComboBox.ItemsSource, this, frameBufferings);//frameBufferings;
 			CompositionComboBox.ItemsSource = Remote.Language.Find(() => CompositionComboBox.ItemsSource, this, desktopCompositions);//desktopCompositions;
@@ -106,7 +107,9 @@ namespace RemoteGUI
 				ServerStartButton.Content = Remote.Language.Find(off => ServerStartButton.Content, this, "");
 				//ServerStartButton.Content = "Start Server";
 			}
-			
+
+			UserNameTextBox.Text = Settings.s.name;
+			PortTextBox.Text = Settings.s.remoteDesktopPort.ToString();
 
 			//lServer.Content = Remote.Language.Find(() => lServer.Content, this, "Server");
 			//cw.WriteLine(lServer.Name);
@@ -164,10 +167,14 @@ namespace RemoteGUI
 					}
 				}
 			}
-			
+			bSettings.Content = Remote.Language.Find(bSettings.Name + ".Content", this) ?? bSettings.Content;
 		}
 
 		private bool OnConnectionAccept(System.Net.Sockets.SocketAsyncEventArgs arg)
+		{
+			return false;
+		}
+		private bool OnReceiveAsync(System.Net.Sockets.SocketAsyncEventArgs arg)
 		{
 			return false;
 		}
@@ -362,9 +369,41 @@ namespace RemoteGUI
 				return Environment.CurrentDirectory;
 			}
 		}
+		// Todo: Blocking call if failed to connect for about 10-15 sec
 		private void Connect_Click(object sender, RoutedEventArgs e)
 		{
+			if (client != null)
+			{
+				cw.WriteLine(Remote.Language.Find("ClientNotNull", this, "A connection is already made!"));
+				return;
+			}
 
+			System.Net.IPAddress address;
+			if (System.Net.IPAddress.TryParse(Address.Text, out address))
+			{
+				client = new SOCKET.Client();
+				client.socket = new System.Net.Sockets.Socket(new System.Net.IPEndPoint(address, Settings.s.remoteDesktopPort).AddressFamily, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
+				try
+				{
+					client.socket.Connect(address, Settings.s.remoteDesktopPort);
+					client.StartReceiveAsync(OnReceiveAsync);
+
+					client.socket.SendTimeout = 2000;
+					client.socket.ReceiveTimeout = 2000;
+
+					
+					
+					
+					
+					cw.WriteLine(Remote.Language.Find("ClientConnected", this, "Succesfully conencted to {0}"), Address.Text);
+					
+				}
+				catch (System.Net.Sockets.SocketException ee)
+				{
+					cw.WriteLine(ee.Message);
+					client = null;
+				}
+			}
 		}
 		private void RemoveAddress_Click(object sender, RoutedEventArgs e)
 		{
@@ -487,6 +526,43 @@ namespace RemoteGUI
 					}
 				}
 			}
+		}
+
+		private void RemoteDesktopConnectButton_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void ConnectedComputers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+
+		}
+
+		private void bSettings_Click(object sender, RoutedEventArgs e)
+		{
+			if (bSettings.IsChecked == true)
+			{
+				SettingsFlyout.IsOpen = true;
+			}
+			else
+			{
+				SettingsFlyout.IsOpen = false;
+			}
+		}
+
+		private void AutoStartServerComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+
+		}
+
+		private void UserNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+		{
+
+		}
+
+		private void PortTextBox_TextChanged(object sender, TextChangedEventArgs e)
+		{
+
 		}
 	}
 }

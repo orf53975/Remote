@@ -22,7 +22,12 @@ namespace Remote
 		[ProtoBuf.ProtoMember(4)]
 		public bool startServer;
 		[ProtoBuf.ProtoMember(5)]
-		public string language;
+		public string language = "LanguageEN";
+		[ProtoBuf.ProtoMember(6)]
+		public string name = Environment.UserName;
+
+		// Do not save it, it will be generated at startup!
+		public string[] languages;
 
 		[ProtoBuf.ProtoContract(SkipConstructor = true)]
 		public class RemoteDesktopSettings

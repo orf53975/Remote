@@ -338,4 +338,19 @@ namespace Remote
 		{
 		}
 	}
+	[AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+	public sealed class LanguageNameAttribute : Attribute
+	{
+		readonly string name;
+
+		public LanguageNameAttribute(string name)
+		{
+			this.name = name;
+		}
+
+		public string Name
+		{
+			get { return name; }
+		}
+	}
 }
