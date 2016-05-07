@@ -68,11 +68,11 @@ namespace RemoteGUI
 			FlyoutsControlAll.Visibility = System.Windows.Visibility.Visible;
 
 			ScreenCaptureMethodComboBox.ItemsSource = screenCaptureMethods;
-			BufferingComboBox.ItemsSource = frameBufferings;
-			CompositionComboBox.ItemsSource = desktopCompositions;
+			BufferingComboBox.ItemsSource = Remote.Language.Find(() => BufferingComboBox.ItemsSource, this, frameBufferings);//frameBufferings;
+			CompositionComboBox.ItemsSource = Remote.Language.Find(() => CompositionComboBox.ItemsSource, this, desktopCompositions);//desktopCompositions;
 			FormatComboBox.ItemsSource = pixelFormats;
 			FPSComboBox.ItemsSource = framesPerSeconds;
-			CompressionComboBox.ItemsSource = compressions;
+			CompressionComboBox.ItemsSource = Remote.Language.Find(() => CompressionComboBox.ItemsSource, this, compressions);//compressions;
 			CodecComboBox.ItemsSource = losslessCodec;
 			LZ4BlockSizeComboBox.ItemsSource = LZ4BlockSizes;
 
@@ -96,13 +96,15 @@ namespace RemoteGUI
 				server = new SOCKET.Server(Settings.s.remoteDesktopPort);
 				server.Listen();
 				server.StartReceiveAsync(OnConnectionAccept);
-				ServerStartButton.Content = "Stop Server";
+				ServerStartButton.Content = Remote.Language.Find(on => ServerStartButton.Content, this, "");
+				//ServerStartButton.Content = "Stop Server";
 			}
 			else
 			{
 				server = new SOCKET.Server(Settings.s.remoteDesktopPort);
 				server.Close();
-				ServerStartButton.Content = "Start Server";
+				ServerStartButton.Content = Remote.Language.Find(off => ServerStartButton.Content, this, "");
+				//ServerStartButton.Content = "Start Server";
 			}
 			
 
@@ -134,7 +136,7 @@ namespace RemoteGUI
 		void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
 
-			/*// Load non english language
+			// Load non english language
 			foreach (var item in FindVisualChildren<Label>(this))
 			{
 				// If it's empty, just ignore
@@ -147,7 +149,20 @@ namespace RemoteGUI
 					}
 				}
 				//else cw.WriteLine("error <-----------");
-			}*/
+			}
+			foreach (var item in FindVisualChildren<Button>(this))
+			{
+				if (item.Content != null)
+				{
+					// Not really important to exclude nav and PART_XXX, as we just reassign the contents.
+					// This is because they dont have language files.
+					if (item.Name != "" && item.Name != "nav" && !item.Name.Contains("PART") && item.Name != "ServerStartButton")
+					{
+						item.Content = Remote.Language.Find(item.Name + ".Content", this) ?? item.Content;
+						//cw.WriteLine(item.Name);
+					}
+				}
+			}
 			
 		}
 
@@ -435,7 +450,8 @@ namespace RemoteGUI
 			if (server.socket != null)
 			{
 				server.Close();
-				ServerStartButton.Content = "Start Server";
+				ServerStartButton.Content = Remote.Language.Find(off => ServerStartButton.Content, this, "Start Server");
+				//ServerStartButton.Content = "Start Server";
 			}
 			else
 			{
@@ -443,7 +459,8 @@ namespace RemoteGUI
 				if (server.Listen())
 				{
 					server.StartReceiveAsync(OnConnectionAccept);
-					ServerStartButton.Content = "Stop Server";
+					ServerStartButton.Content = Remote.Language.Find(on => ServerStartButton.Content, this, "Stop Server");
+					//ServerStartButton.Content = "Stop Server";
 
 				}
 			}

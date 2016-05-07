@@ -11,3 +11,24 @@ RemoteGUI.MainWindow.lDirect3D.Content = 3D
 RemoteGUI.MainWindow.lCompression.Content = Tömörítés
 RemoteGUI.MainWindow.lCodec.Content = Kodek
 RemoteGUI.MainWindow.lBlockSize.Content = Tömörítési block méret
+
+# Buttons
+RemoteGUI.MainWindow.ServerStartButton.Content =>
+		(on) = Szerver leállítása
+		(off) = Szerver indítása
+		() => end
+RemoteGUI.MainWindow.SaveAddress.Content = Mentés
+RemoteGUI.MainWindow.RemoveAddress.Content = Törlés
+RemoteGUI.MainWindow.Connect.Content = Csatlakozás
+RemoteGUI.MainWindow.ServerDisconnectButton.Content = Lekapcsolás
+
+# Arrays
+RemoteGUI.MainWindow.BufferingComboBox.ItemsSource => ()
+		Kikapcsolva => Bekapcsolva
+		() => end
+RemoteGUI.MainWindow.CompositionComboBox.ItemsSource => ()
+		Bekapcsolva => Kikapcsolva
+		() => end
+RemoteGUI.MainWindow.CompressionComboBox.ItemsSource => ()
+		Veszteség mentes => Veszteséges
+		() => end

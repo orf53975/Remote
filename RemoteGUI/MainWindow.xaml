@@ -12,7 +12,7 @@
                     <Label Name="lServer" Content="Server" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" Width="75"/>
                     <ComboBox Name="ServerConnectedComputers" HorizontalAlignment="Left" Margin="128,10,0,0" VerticalAlignment="Top" Width="317"/>
                     <Button Name="ServerDisconnectButton"  Content="Disconnect" HorizontalAlignment="Left" Margin="370,53,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="ServerDisconnectButton_Click"/>
-                    <Button Name="ServerStartButton" Content="Start Server" HorizontalAlignment="Left" Margin="128,53,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="ServerStartButton_Click"/>
+                    <Button Name="ServerStartButton" Content="Start Server" HorizontalAlignment="Left" Margin="128,53,0,0" VerticalAlignment="Top" Width="100" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="ServerStartButton_Click"/>
 
                     <Button Name="Connect" Content="Connect" HorizontalAlignment="Left" Margin="370,186,0,0" VerticalAlignment="Top" Width="75" Click="Connect_Click" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1"/>
 
@@ -42,7 +42,7 @@
                         <ComboBox Name="CompositionComboBox" HorizontalAlignment="Left" Margin="245,134,0,0" VerticalAlignment="Top" Width="165"/>
                         <ComboBox Name="FormatComboBox" HorizontalAlignment="Left" Margin="245,174,0,0" VerticalAlignment="Top" Width="165"/>
                         <ComboBox Name="FPSComboBox" HorizontalAlignment="Left" Margin="245,214,0,0" VerticalAlignment="Top" Width="165"/>
-                        <Label Name="lDesktop" Content="Desktop" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Width="410"/>
+                        <Label Name="lDesktop" Content="Desktop" HorizontalAlignment="Left" Margin="245,10,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Width="165"/>
                         <Label Name="lDirect3D" Content="Direct3D" HorizontalAlignment="Left" Margin="522,10,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Width="165"/>
                         <Label Name="lCompression" Content="Compression" HorizontalAlignment="Left" Margin="10,304,0,0" VerticalAlignment="Top" Width="192" HorizontalContentAlignment="Right"/>
                         <ComboBox Name="CompressionComboBox" HorizontalAlignment="Left" Margin="245,304,0,0" VerticalAlignment="Top" Width="165" SelectionChanged="CompressionComboBox_SelectionChanged"/>
