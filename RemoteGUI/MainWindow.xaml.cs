@@ -40,6 +40,7 @@ namespace RemoteGUI
 		public static string[] losslessCodec = new string[] { "LZ4" };
 		public static string[] lossyCodec = new string[] { "ffmpeg" };
 		public static string[] LZ4BlockSizes = new string[] { "32kb", "64kb", "128kb", "256kb", "512kb", "Max" };
+		public static string[] autoStartServer = new string[] { "Disabled", "Enabled" };
 
 		public List<string> serverConnectedComputerNames;
 		public List<SOCKET.Client> serverConnectedComputers;
@@ -80,14 +81,16 @@ namespace RemoteGUI
 			CompressionComboBox.ItemsSource = Remote.Language.Find(() => CompressionComboBox.ItemsSource, this, compressions);//compressions;
 			CodecComboBox.ItemsSource = losslessCodec;
 			LZ4BlockSizeComboBox.ItemsSource = LZ4BlockSizes;
+			AutoStartServerComboBox.ItemsSource = Remote.Language.Find(() => AutoStartServerComboBox.ItemsSource, this, autoStartServer); ;
 
-			Bind(ScreenCaptureMethodComboBox.Name, () => Settings.s.remoteDesktopSettings.screenCaptureMethod);
-			Bind(BufferingComboBox.Name, () => Settings.s.remoteDesktopSettings.frameBuffering);
-			Bind(CompositionComboBox.Name, () => Settings.s.remoteDesktopSettings.desktopComposition);
-			Bind(FormatComboBox.Name, () => Settings.s.remoteDesktopSettings.pixelFormat);
-			Bind(FPSComboBox.Name, () => Settings.s.remoteDesktopSettings.framesPerSecond);
-			Bind(CompressionComboBox.Name, () => Settings.s.remoteDesktopSettings.compression);
-			Bind(LZ4BlockSizeComboBox.Name, () => Settings.s.remoteDesktopSettings.LZ4BlockSize);
+			Bind(ScreenCaptureMethodComboBox.Name, () => Settings.s.remoteDesktopSettings.screenCaptureMethod, true);
+			Bind(BufferingComboBox.Name, () => Settings.s.remoteDesktopSettings.frameBuffering, true);
+			Bind(CompositionComboBox.Name, () => Settings.s.remoteDesktopSettings.desktopComposition, true);
+			Bind(FormatComboBox.Name, () => Settings.s.remoteDesktopSettings.pixelFormat, true);
+			Bind(FPSComboBox.Name, () => Settings.s.remoteDesktopSettings.framesPerSecond, true);
+			Bind(CompressionComboBox.Name, () => Settings.s.remoteDesktopSettings.compression, true);
+			Bind(LZ4BlockSizeComboBox.Name, () => Settings.s.remoteDesktopSettings.LZ4BlockSize, true);
+			Bind(AutoStartServerComboBox.Name, () => Settings.s.startServer, false);
 
 			ScreenCaptureMethodComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.screenCaptureMethod;
 			BufferingComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.frameBuffering;
@@ -112,7 +115,7 @@ namespace RemoteGUI
 
 			Address.ItemsSource = Settings.s.addresses;
 
-			if (Settings.s.startServer)
+			if (Settings.s.startServer == 1)
 			{
 				server = new SOCKET.Server(Settings.s.remoteDesktopPort);
 				server.Listen();
@@ -598,20 +601,36 @@ namespace RemoteGUI
 			{
 				//bindings[cb.Name].SetValue(bindings[cb.Name].)
 				BindingEntry be = bindings[cb.Name];
-				be.fi.SetValue(be.parent.GetValue(Settings.s), cb.SelectedIndex);
+				if (be.parent != null)
+				{
+					be.fi.SetValue(be.parent.GetValue(Settings.s), cb.SelectedIndex);
+				}
+				else
+				{
+					be.fi.SetValue(Settings.s, cb.SelectedIndex);
+				}
 			}
 		}
 
 		private void UserNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
 		{
-
+			Settings.s.name = UserNameTextBox.Text;
 		}
 
 		private void PortTextBox_TextChanged(object sender, TextChangedEventArgs e)
 		{
-
+			int temp;
+			if (!Int32.TryParse(PortTextBox.Text, out temp))
+			{
+				// What should we do? Nothing right now :(
+				return;
+			}
+			else
+			{
+				Settings.s.remoteDesktopPort = temp;
+			}
 		}
-		private void Bind<T>(string name, Expression<Func<T>> memberExpression)
+		private void Bind<T>(string name, Expression<Func<T>> memberExpression, bool parent)
 		{
 			var memberExp = memberExpression.Body as MemberExpression;
 			MemberInfo memberInfo = memberExp.Member;
@@ -627,8 +646,15 @@ namespace RemoteGUI
 					break;
 				case MemberTypes.Field:
 					// Save it
-					memberExp = memberExp.Expression as MemberExpression;
-					bindings[name] = new BindingEntry() { fi = memberInfo as FieldInfo, parent = memberExp.Member as FieldInfo };
+					if (parent)
+					{
+						memberExp = memberExp.Expression as MemberExpression;
+						bindings[name] = new BindingEntry() { fi = memberInfo as FieldInfo, parent = memberExp.Member as FieldInfo };
+					}
+					else
+					{
+						bindings[name] = new BindingEntry() { fi = memberInfo as FieldInfo, parent = null };
+					}
 					break;
 				case MemberTypes.Method:
 					break;
@@ -641,7 +667,6 @@ namespace RemoteGUI
 				default:
 					break;
 			}
-			
 		}
 		private class BindingEntry
 		{

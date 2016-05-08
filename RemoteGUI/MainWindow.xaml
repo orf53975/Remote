@@ -33,10 +33,10 @@
                         <Label Name="lCopmosition" Content="Copmosition" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top" Width="192" HorizontalContentAlignment="Right"/>
                         <Label Name="lFormat" Content="Format" HorizontalAlignment="Left" Margin="10,174,0,0" VerticalAlignment="Top" Width="192" HorizontalContentAlignment="Right"/>
                         <Label Name="lFframesPerSeconds" Content="Frames per seconds (FPS)" HorizontalAlignment="Left" Margin="10,214,0,0" VerticalAlignment="Top" Width="192" HorizontalContentAlignment="Right"/>
-                        <ComboBox Name="BufferingComboBox" HorizontalAlignment="Left" Margin="245,94,0,0" VerticalAlignment="Top" Width="165"/>
-                        <ComboBox Name="CompositionComboBox" HorizontalAlignment="Left" Margin="245,134,0,0" VerticalAlignment="Top" Width="165"/>
-                        <ComboBox Name="FormatComboBox" HorizontalAlignment="Left" Margin="245,174,0,0" VerticalAlignment="Top" Width="165"/>
-                        <ComboBox Name="FPSComboBox" HorizontalAlignment="Left" Margin="245,214,0,0" VerticalAlignment="Top" Width="165"/>
+                        <ComboBox Name="BufferingComboBox" HorizontalAlignment="Left" Margin="245,94,0,0" VerticalAlignment="Top" Width="165" SelectionChanged="GenericComboBox_SelectionChanged"/>
+                        <ComboBox Name="CompositionComboBox" HorizontalAlignment="Left" Margin="245,134,0,0" VerticalAlignment="Top" Width="165" SelectionChanged="GenericComboBox_SelectionChanged"/>
+                        <ComboBox Name="FormatComboBox" HorizontalAlignment="Left" Margin="245,174,0,0" VerticalAlignment="Top" Width="165" SelectionChanged="GenericComboBox_SelectionChanged"/>
+                        <ComboBox Name="FPSComboBox" HorizontalAlignment="Left" Margin="245,214,0,0" VerticalAlignment="Top" Width="165" SelectionChanged="GenericComboBox_SelectionChanged"/>
                         <Label Name="lDesktop" Content="Desktop" HorizontalAlignment="Left" Margin="245,10,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Width="165"/>
                         <Label Name="lDirect3D" Content="Direct3D" HorizontalAlignment="Left" Margin="522,10,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Width="165"/>
                         <Label Name="lCompression" Content="Compression" HorizontalAlignment="Left" Margin="10,304,0,0" VerticalAlignment="Top" Width="192" HorizontalContentAlignment="Right"/>
@@ -52,7 +52,7 @@
                             <TabItem IsEnabled="False">
                                 <!-- Losless/LZ4 -->
                                 <Grid>
-                                    <ComboBox x:Name="LZ4BlockSizeComboBox" HorizontalAlignment="Left" Margin="240,10,0,0" VerticalAlignment="Top" Width="165"/>
+                                    <ComboBox x:Name="LZ4BlockSizeComboBox" HorizontalAlignment="Left" Margin="240,10,0,0" VerticalAlignment="Top" Width="165" SelectionChanged="GenericComboBox_SelectionChanged"/>
                                     <Label Name="lBlockSize" Content="Block size" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="187" HorizontalContentAlignment="Right"/>
                                     <Label Content="Compression" HorizontalAlignment="Left" Margin="123,304,0,-34" VerticalAlignment="Top"/>
                                     <ComboBox x:Name="CompressionComboBox_Copy" HorizontalAlignment="Left" Margin="245,304,0,-34" VerticalAlignment="Top" Width="165"/>
@@ -93,11 +93,11 @@
                 <Grid>
                     <Grid Margin="-20,0,0,0">
                         <Label Name="lUserName" Content="Name" HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" Width="47" HorizontalContentAlignment="Right"/>
-                        <TextBox Name="UserNameTextBox" HorizontalAlignment="Left" Height="23" Margin="86,20,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" TextChanged="UserNameTextBox_TextChanged"/>
+                        <TextBox Name="UserNameTextBox" HorizontalAlignment="Left" Height="23" Margin="86,20,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="UserNameTextBox_TextChanged"/>
                         <Label Content="Port" HorizontalAlignment="Left" Margin="319,20,0,0" VerticalAlignment="Top" Width="47" HorizontalContentAlignment="Right"/>
                         <TextBox Name="PortTextBox" HorizontalAlignment="Left" Height="23" Margin="386,20,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" TextChanged="PortTextBox_TextChanged"/>
                         <Label Content="Auto start server" HorizontalAlignment="Left" Margin="222,68,0,0" VerticalAlignment="Top" Width="144" HorizontalContentAlignment="Right"/>
-                        <ComboBox Name="AutoStartServerComboBox" HorizontalAlignment="Left" Margin="386,68,0,0" VerticalAlignment="Top" Width="120"/>
+                        <ComboBox Name="AutoStartServerComboBox" HorizontalAlignment="Left" Margin="386,68,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="GenericComboBox_SelectionChanged"/>
 
                     </Grid>
                 </Grid>

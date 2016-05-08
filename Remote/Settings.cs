@@ -20,7 +20,7 @@ namespace Remote
 		[ProtoBuf.ProtoMember(3)]
 		public RemoteDesktopSettings remoteDesktopSettings = new RemoteDesktopSettings(); //
 		[ProtoBuf.ProtoMember(4)]
-		public bool startServer;
+		public int startServer;
 		[ProtoBuf.ProtoMember(5)]
 		public string language = "LanguageEN";
 		[ProtoBuf.ProtoMember(6)]
