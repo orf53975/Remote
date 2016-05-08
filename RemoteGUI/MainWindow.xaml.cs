@@ -20,6 +20,8 @@ using System.Threading;
 using System.Diagnostics;
 using Remote;
 using MahApps.Metro.Controls;
+using System.Linq.Expressions;
+using System.Reflection;
 namespace RemoteGUI
 {
 	/// <summary>
@@ -27,6 +29,8 @@ namespace RemoteGUI
 	/// </summary>
 	public partial class MainWindow : MetroWindow
 	{
+		Dictionary<string, BindingEntry> bindings = new Dictionary<string, BindingEntry>();
+
 		public static string[] screenCaptureMethods = new string[] { "GDI", "BitBlt", "DirectX" };
 		public static string[] frameBufferings = new string[] { "Disabled", "Enabled" };
 		public static string[] desktopCompositions = new string[] { "Enabled", "Disabled" };
@@ -77,6 +81,14 @@ namespace RemoteGUI
 			CodecComboBox.ItemsSource = losslessCodec;
 			LZ4BlockSizeComboBox.ItemsSource = LZ4BlockSizes;
 
+			Bind(ScreenCaptureMethodComboBox.Name, () => Settings.s.remoteDesktopSettings.screenCaptureMethod);
+			Bind(BufferingComboBox.Name, () => Settings.s.remoteDesktopSettings.frameBuffering);
+			Bind(CompositionComboBox.Name, () => Settings.s.remoteDesktopSettings.desktopComposition);
+			Bind(FormatComboBox.Name, () => Settings.s.remoteDesktopSettings.pixelFormat);
+			Bind(FPSComboBox.Name, () => Settings.s.remoteDesktopSettings.framesPerSecond);
+			Bind(CompressionComboBox.Name, () => Settings.s.remoteDesktopSettings.compression);
+			Bind(LZ4BlockSizeComboBox.Name, () => Settings.s.remoteDesktopSettings.LZ4BlockSize);
+
 			ScreenCaptureMethodComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.screenCaptureMethod;
 			BufferingComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.frameBuffering;
 			CompositionComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.desktopComposition;
@@ -85,10 +97,18 @@ namespace RemoteGUI
 			CompressionComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.compression;
 			if(CompressionComboBox.SelectedIndex == 0)
 			{
+				//Bind(CodecComboBox.Name, () => Settings.s.remoteDesktopSettings.losslessCodec);
+				// Notes: No need to bind here, as this will be changed in custom method and not in generic one!
 				CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.losslessCodec;
 			}
-			else CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.lossyCodec;
+			else
+			{
+				//Bind(CodecComboBox.Name, () => Settings.s.remoteDesktopSettings.lossyCodec);
+				// Notes: No need to bind here, as this will be changed in custom method and not in generic one!
+				CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.lossyCodec;
+			}
 			LZ4BlockSizeComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.LZ4BlockSize;
+
 
 			Address.ItemsSource = Settings.s.addresses;
 
@@ -550,9 +570,16 @@ namespace RemoteGUI
 			}
 		}
 
-		private void AutoStartServerComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void GenericComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-
+			ComboBox cb = sender as ComboBox;
+			// Should never be false
+			if (cb != null)
+			{
+				//bindings[cb.Name].SetValue(bindings[cb.Name].)
+				BindingEntry be = bindings[cb.Name];
+				be.fi.SetValue(be.parent.GetValue(Settings.s), cb.SelectedIndex);
+			}
 		}
 
 		private void UserNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -563,6 +590,43 @@ namespace RemoteGUI
 		private void PortTextBox_TextChanged(object sender, TextChangedEventArgs e)
 		{
 
+		}
+		private void Bind<T>(string name, Expression<Func<T>> memberExpression)
+		{
+			var memberExp = memberExpression.Body as MemberExpression;
+			MemberInfo memberInfo = memberExp.Member;
+			switch (memberInfo.MemberType)
+			{
+				case MemberTypes.All:
+					break;
+				case MemberTypes.Constructor:
+					break;
+				case MemberTypes.Custom:
+					break;
+				case MemberTypes.Event:
+					break;
+				case MemberTypes.Field:
+					// Save it
+					memberExp = memberExp.Expression as MemberExpression;
+					bindings[name] = new BindingEntry() { fi = memberInfo as FieldInfo, parent = memberExp.Member as FieldInfo };
+					break;
+				case MemberTypes.Method:
+					break;
+				case MemberTypes.NestedType:
+					break;
+				case MemberTypes.Property:
+					break;
+				case MemberTypes.TypeInfo:
+					break;
+				default:
+					break;
+			}
+			
+		}
+		private class BindingEntry
+		{
+			public FieldInfo fi;
+			public FieldInfo parent;
 		}
 	}
 }

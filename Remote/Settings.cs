@@ -26,7 +26,7 @@ namespace Remote
 		[ProtoBuf.ProtoMember(6)]
 		public string name = Environment.UserName;
 
-		// Do not save it, it will be generated at startup!
+		// Do not save it, it will be generated at startup ... hopefully
 		public string[] languages;
 
 		[ProtoBuf.ProtoContract(SkipConstructor = true)]

@@ -27,7 +27,7 @@
                     </ListBox>
 
                     <Grid Margin="479,0,0,0">
-                        <ComboBox Name="ScreenCaptureMethodComboBox" HorizontalAlignment="Left" Margin="245,50,0,0" VerticalAlignment="Top" Width="165"/>
+                        <ComboBox Name="ScreenCaptureMethodComboBox" HorizontalAlignment="Left" Margin="245,50,0,0" VerticalAlignment="Top" Width="165" SelectionChanged="GenericComboBox_SelectionChanged"/>
                         <Label Name="lScreenCaptureMethod" Content="Scren capture method" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="192" HorizontalContentAlignment="Right"/>
                         <Label Name="lBuffering" Content="Buffering" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,94,0,0" Width="192" HorizontalContentAlignment="Right"/>
                         <Label Name="lCopmosition" Content="Copmosition" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top" Width="192" HorizontalContentAlignment="Right"/>
@@ -82,7 +82,7 @@
         <StatusBar Height="22" VerticalAlignment="Bottom" Background="{DynamicResource GrayBrush9}" MouseLeftButtonUp="StatusBar_MouseLeftButtonUp">
             <TextBlock Name="ConsoleQuickText" TextWrapping="Wrap" Text=""/>
         </StatusBar>
-        <Controls:FlyoutsControl Name="FlyoutsControlAll" Visibility="Visible" Focusable="False">
+        <Controls:FlyoutsControl Name="FlyoutsControlAll" Visibility="Hidden" Focusable="False">
             <Controls:Flyout Name="ConsoleFlyout" Position="Bottom" Height="300" IsOpen="False" CloseButtonVisibility="Collapsed" TitleVisibility="Collapsed" >
                 <Grid>
                     <TextBox Name="ConsoleInputText" Text="" Margin="-21,278,-4,-4" BorderThickness="0" PreviewKeyDown="ConsoleInputText_PreviewKeyDown"/>
@@ -97,7 +97,7 @@
                         <Label Content="Port" HorizontalAlignment="Left" Margin="319,20,0,0" VerticalAlignment="Top" Width="47" HorizontalContentAlignment="Right"/>
                         <TextBox Name="PortTextBox" HorizontalAlignment="Left" Height="23" Margin="386,20,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" TextChanged="PortTextBox_TextChanged"/>
                         <Label Content="Auto start server" HorizontalAlignment="Left" Margin="222,68,0,0" VerticalAlignment="Top" Width="144" HorizontalContentAlignment="Right"/>
-                        <ComboBox Name="AutoStartServerComboBox" HorizontalAlignment="Left" Margin="386,68,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="AutoStartServerComboBox_SelectionChanged"/>
+                        <ComboBox Name="AutoStartServerComboBox" HorizontalAlignment="Left" Margin="386,68,0,0" VerticalAlignment="Top" Width="120"/>
 
                     </Grid>
                 </Grid>
