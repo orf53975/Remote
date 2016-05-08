@@ -471,6 +471,15 @@ namespace RemoteGUI
 		{
 			if (compressions[CompressionComboBox.SelectedIndex] == "Lossless")
 			{
+				if (CodecComboBox.SelectedIndex < 0)
+				{
+					CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.losslessCodec;
+				}
+				else
+				{
+					Settings.s.remoteDesktopSettings.losslessCodec = CodecComboBox.SelectedIndex;
+				}
+
 				if (losslessCodec[Settings.s.remoteDesktopSettings.losslessCodec] == "LZ4")
 				{
 					CodecInfo.SelectedIndex = 0;
@@ -478,6 +487,15 @@ namespace RemoteGUI
 			}
 			else
 			{
+				if (CodecComboBox.SelectedIndex < 0)
+				{
+					CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.lossyCodec;
+				}
+				else
+				{
+					Settings.s.remoteDesktopSettings.lossyCodec = CodecComboBox.SelectedIndex;
+				}
+
 				if (lossyCodec[Settings.s.remoteDesktopSettings.lossyCodec] == "ffmpeg")
 				{
 					CodecInfo.SelectedIndex = 1;
@@ -490,12 +508,14 @@ namespace RemoteGUI
 			if (CompressionComboBox.SelectedIndex == 0)
 			{
 				CodecComboBox.ItemsSource = losslessCodec;
-				CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.losslessCodec;
+				// No longer needed
+				//CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.losslessCodec;
 			}
 			else
 			{
 				CodecComboBox.ItemsSource = lossyCodec;
-				CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.lossyCodec;
+				// No longer needed
+				//CodecComboBox.SelectedIndex = Settings.s.remoteDesktopSettings.lossyCodec;
 			}
 			//CodecComboBox_SelectionChanged(null, null); //useless here, changes made to the ItemsSource will trigger SelectionChanged method
 		}
