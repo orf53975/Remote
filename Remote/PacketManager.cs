@@ -194,11 +194,11 @@ namespace Remote
 		{
 			return br.ReadUInt16();
 		}
-		public uint ReadUInt16()
+		public uint ReadUInt32()
 		{
 			return br.ReadUInt32();
 		}
-		public ulong ReadUInt16()
+		public ulong ReadUInt64()
 		{
 			return br.ReadUInt64();
 		}
