@@ -13,7 +13,12 @@ namespace Remote
 		public BinaryWriter bw;
 		public BinaryReader br;
 		//public int size;
-		
+		public void Dispose()
+		{
+			ms.Dispose();
+			bw.Dispose();
+			br.Dispose();
+		}
 		public PacketManager(byte[] data)
 		{
 			ms = new MemoryStream(data);

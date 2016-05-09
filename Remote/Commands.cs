@@ -56,6 +56,7 @@ namespace Remote
 		REMOTE_DESKTOP,
 		REMOTE_DESKTOP_FRAME,
 		REMOTE_DESKTOP_MOUSE_MOVE,
+		REMOTE_DESKTOP_REQUEST,
 		SEND,
 		UPDATE = 867584, //static, minden verzióban ugyan az
 		USER_NAME

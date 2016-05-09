@@ -50,6 +50,8 @@ namespace RemoteGUI
 		SOCKET.Client client;
 
 		List<StackPanel> connectedComputersItems = new List<StackPanel>();
+		//Dictionary<StackPanel, ClientData> connectedComputersBinding = new Dictionary<StackPanel, ClientData>();
+		Clients clients = new Clients();
 
 		ConsoleWriter cw = new ConsoleWriter(1000);
 		string tempText;
@@ -213,6 +215,7 @@ namespace RemoteGUI
 				{
 						// Connection attempt
 					case Command.CONNECT:
+						#region CONNECT
 						{
 							cw.WriteLine(Remote.Language.Find("IncomingConnection", this, "Incoming connection attempt from: {0}"), client.ClientAddress);
 							Command c = client.pmIn.ReadCommand();
@@ -220,15 +223,28 @@ namespace RemoteGUI
 							{
 								Dispatcher.Invoke(new Action(() =>
 								{
+									ClientData cd = new ClientData();
+									cd.client = client;
 									Label l = new Label();
-									l.Content = client.pmIn.ReadString();
+									cd.name = client.pmIn.ReadString();
+									cd.lName = l;
+									l.Content = cd.name;
+
+									// Todo: Implement Client array!
+
 									StackPanel sp = new StackPanel();
 									sp.Children.Add(l);
+									//connectedComputersBinding.Add(sp, cd);
+									clients[sp] = cd;
 									connectedComputersItems.Add(sp);
+									
 									ConnectedComputers.ItemsSource = connectedComputersItems;
 								}),
 								DispatcherPriority.Render);
+								client.pmOut.New();
 								client.pmOut.Write(Command.CONNECT_SUCCESS);
+								client.pmOut.Write(Command.USER_NAME);
+								client.pmOut.Write(Settings.s.name);
 								client.pmOut.End();
 								if (client.SendSafe())
 								{
@@ -238,22 +254,70 @@ namespace RemoteGUI
 								else
 								{
 									cw.WriteLine(client.lastSendException.Message);
+									client.Close();
 									client = null;
 								}
 							}
 						}
 						break;
-						// Success!
+						#endregion
+					// Success!
 					case Command.CONNECT_SUCCESS:
+						#region CONNECT_SUCCES
 						{
 							cw.WriteLine(Remote.Language.Find("ClientConnected", this, "Succesfully connected to {0}"), client.ClientAddress);
+							Command c = client.pmIn.ReadCommand();
+							if (c == Command.USER_NAME)
+							{
+								Dispatcher.Invoke(new Action(() =>
+								{
+									ClientData cd = new ClientData();
+									cd.client = client;
+									Label l = new Label();
+									cd.name = client.pmIn.ReadString();
+									cd.lName = l;
+									l.Content = cd.name;
+
+									// Todo: Implement Client array!
+
+									StackPanel sp = new StackPanel();
+									sp.Children.Add(l);
+									//connectedComputersBinding.Add(sp, cd);
+									clients[sp] = cd;
+									connectedComputersItems.Add(sp);
+									ConnectedComputers.ItemsSource = connectedComputersItems;
+								}),
+								DispatcherPriority.Render);
+							}
 							return true;
 						}
+						#endregion
+					case Command.REMOTE_DESKTOP_REQUEST:
+					#region REMOTE_DESKTOP_REQUEST
+						{
+							ClientData cd = clients[(SOCKET.Client)arg.UserToken];
+							cd.remoteDesktopRequest = true;
+							Dispatcher.Invoke(new Action(() =>
+							{
+								ConnectedComputers_SelectionChanged(null, null);
+							}), DispatcherPriority.Render);
+							cw.WriteLine(Remote.Language.Find("RemoteDesktopRequestIncoming", this, "A Remote Desktop request was received from {0} / {1}"), cd.name, cd.client.ClientAddress);
+						}
+						break;
+					#endregion
 					default:
 						break;
 				}
 			}
-
+			//Client disconnected, clean up.
+			else if (arg.BytesTransferred == 0)
+			{
+				foreach (var item in connectedComputersItems)
+				{
+					
+				}
+				//cw.WriteLine("End");
+			}
 			return false;
 		}
 		/*protected override void OnPreviewKeyDown(KeyEventArgs e)
@@ -482,6 +546,7 @@ namespace RemoteGUI
 					else
 					{
 						cw.WriteLine(client.lastSendException.Message);
+						client.Close();
 						client = null;
 					}
 					
@@ -491,6 +556,7 @@ namespace RemoteGUI
 				catch (System.Net.Sockets.SocketException ee)
 				{
 					cw.WriteLine(ee.Message);
+					client.Close();
 					client = null;
 				}
 			}
@@ -638,14 +704,33 @@ namespace RemoteGUI
 			}
 		}
 
-		private void RemoteDesktopConnectButton_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
 		private void ConnectedComputers_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
+			// Only show panel if we have something selected
+			if (ConnectedComputers.SelectedIndex >= 0)
+			{
+				StackPanel sp = connectedComputersItems[ConnectedComputers.SelectedIndex];
+				//ClientData cd = connectedComputersBinding[sp];
+				ClientData cd = clients[sp];
 
+				if (ConnectedInfo.Visibility != System.Windows.Visibility.Visible)
+				{
+					ConnectedInfo.Visibility = System.Windows.Visibility.Visible;
+				}
+
+				AddressConnected.Content = cd.client.ClientAddress;
+
+				if (cd.remoteDesktopRequest)
+				{
+					lRemoteDesktopRequest.Visibility = System.Windows.Visibility.Visible;
+					RemoteDesktopRequestAcceptButton.Visibility = System.Windows.Visibility.Visible;
+				}
+				else
+				{
+					lRemoteDesktopRequest.Visibility = System.Windows.Visibility.Hidden;
+					RemoteDesktopRequestAcceptButton.Visibility = System.Windows.Visibility.Hidden;
+				}
+			}
 		}
 
 		private void bSettings_Click(object sender, RoutedEventArgs e)
@@ -739,6 +824,76 @@ namespace RemoteGUI
 		{
 			public FieldInfo fi;
 			public FieldInfo parent;
+		}
+		private class ClientData
+		{
+			public string name;
+			public SOCKET.Client client;
+
+			public Label lName;
+
+
+			public bool remoteDesktopRequest;
+		}
+
+		private void RemoteDesktopRequestAcceptButton_Click(object sender, RoutedEventArgs e)
+		{
+			WindowState = System.Windows.WindowState.Minimized;
+			RemoteGuiLoader.MainWindow loader = new RemoteGuiLoader.MainWindow();
+			loader.Show();
+			//loader.Activate();
+			System.Threading.Thread.Sleep(5000);
+		}
+		private void RemoteDesktopConnectButton_Click(object sender, RoutedEventArgs e)
+		{
+			StackPanel sp = connectedComputersItems[ConnectedComputers.SelectedIndex];
+			//ClientData cd = connectedComputersBinding[sp];
+			ClientData cd = clients[sp];
+
+			cd.client.pmOut.New();
+			cd.client.pmOut.Write(Command.REMOTE_DESKTOP_REQUEST);
+			cd.client.pmOut.End();
+
+			if (cd.client.SendSafe())
+			{
+				cw.WriteLine(Remote.Language.Find("RemoteDesktopRequest", this, "Remote Desktop Request was sent to {0} at {1}"), cd.name, cd.client.ClientAddress);
+				return;
+			}
+			else
+			{
+				// Should we do this here?
+				/*cw.WriteLine(client.lastSendException.Message);
+				client.Close();
+				client = null;*/
+			}
+		}
+		private class Clients
+		{
+			private Dictionary<StackPanel, ClientData> spDic = new Dictionary<StackPanel,ClientData>();
+			private Dictionary<SOCKET.Client, ClientData> scDic = new Dictionary<SOCKET.Client, ClientData>();
+			public ClientData this[StackPanel sp]
+			{
+				get
+				{
+					return spDic[sp];
+				}
+				set
+				{
+					spDic[sp] = value;
+					scDic[value.client] = value;
+				}
+			}
+			public ClientData this[SOCKET.Client sc]
+			{
+				get
+				{
+					return scDic[sc];
+				}
+				/*set
+				{
+					scDic[sc] = value;
+				}*/
+			}
 		}
 	}
 }

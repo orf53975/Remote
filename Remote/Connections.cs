@@ -90,6 +90,7 @@ namespace Remote
 			public PacketManager pmOut;
 			public int BytesSent;
 			public SocketException lastSendException;
+			private SocketAsyncEventArgs arg;
 			public IPAddress ClientAddress
 			{
 				get
@@ -113,6 +114,15 @@ namespace Remote
 				pmIn = new PacketManager(bufferIn);
 				pmOut = new PacketManager(bufferOut);
 			}
+			public void Close()
+			{
+				socket.Close();
+				arg.Completed -= Received;
+				arg = null;
+				p.Dispose();
+				pmIn.Dispose();
+				pmOut.Dispose();
+			}
 			public void StartReceiveAsync(Func<SocketAsyncEventArgs, bool> arg)
 			{
 				onReceiveAsync = arg;
@@ -126,6 +136,7 @@ namespace Remote
 					arg.Completed += Received;
 					arg.SetBuffer(bufferIn, 0, 8192);
 					arg.UserToken = this;
+					this.arg = arg;
 					bool notReceived = socket.ReceiveAsync(arg);
 					if (!notReceived) onReceiveAsync(arg);
 				}

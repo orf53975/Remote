@@ -66,8 +66,10 @@
                     <Grid Name="ConnectedInfo" HorizontalAlignment="Left" Height="250" Margin="32,344,0,0" VerticalAlignment="Top" Width="413" >
                         <Border BorderThickness="1" BorderBrush="White"></Border>
                         <Label Name="lAddressConnected" Content="Address" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="60"/>
-                        <Label Name="AddressConnected" Content="" HorizontalAlignment="Left" Margin="83,10,0,0" VerticalAlignment="Top" Width="320"/>
+                        <Label Name="AddressConnected" Content="" HorizontalAlignment="Left" Margin="83,10,0,0" VerticalAlignment="Top" Width="320" HorizontalContentAlignment="Center"/>
                         <Button Name="RemoteDesktopConnectButton" Content="Connect" HorizontalAlignment="Left" Margin="328,41,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="RemoteDesktopConnectButton_Click"/>
+                        <Label Name="lRemoteDesktopRequest" Content="Remote Desktop request" HorizontalAlignment="Left" Margin="10,214,0,0" VerticalAlignment="Top" Width="285"/>
+                        <Button Name="RemoteDesktopRequestAcceptButton" Content="Accept" HorizontalAlignment="Left" Margin="328,212,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource SquareButtonStyle}" BorderThickness="1" Click="RemoteDesktopRequestAcceptButton_Click"/>
                     </Grid>
 
                 </Grid>
