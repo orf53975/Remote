@@ -24,6 +24,7 @@ namespace Remote
 		COMPUTER_NAME,
 		COMPUTER_NAME_REQUEST,
 		CONNECT,
+		CONNECT_SUCCESS,
 		FOR,
 		FORWARD,
 		GET,
@@ -56,6 +57,7 @@ namespace Remote
 		REMOTE_DESKTOP_FRAME,
 		REMOTE_DESKTOP_MOUSE_MOVE,
 		SEND,
-		UPDATE = 867584 //static, minden verzióban ugyan az
+		UPDATE = 867584, //static, minden verzióban ugyan az
+		USER_NAME
 	}
 }

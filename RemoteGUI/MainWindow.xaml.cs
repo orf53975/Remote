@@ -48,6 +48,9 @@ namespace RemoteGUI
 
 		SOCKET.Server server;
 		SOCKET.Client client;
+
+		List<StackPanel> connectedComputersItems = new List<StackPanel>();
+
 		ConsoleWriter cw = new ConsoleWriter(1000);
 		string tempText;
 
@@ -182,7 +185,7 @@ namespace RemoteGUI
 				{
 					// Not really important to exclude nav and PART_XXX, as we just reassign the contents.
 					// This is because they dont have language files.
-					// Note: ServerStartButton uses conditions, so this call would throw an exception
+					// Note: ServerStartButton uses conditions, so this call would throw an exception.
 					if (item.Name != "" && item.Name != "nav" && !item.Name.Contains("PART") && item.Name != "ServerStartButton")
 					{
 						item.Content = Remote.Language.Find(item.Name + ".Content", this) ?? item.Content;
@@ -195,10 +198,62 @@ namespace RemoteGUI
 
 		private bool OnConnectionAccept(System.Net.Sockets.SocketAsyncEventArgs arg)
 		{
+			client = new SOCKET.Client();
+			client.socket = arg.AcceptSocket;
+			client.StartReceiveAsync(OnReceiveAsync);
+			// Note: Allow more connection? Maybe we should read it from Settings?
 			return false;
 		}
 		private bool OnReceiveAsync(System.Net.Sockets.SocketAsyncEventArgs arg)
 		{
+			// Notes: First 4 bytes are the size of the message.
+			if (arg.BytesTransferred > 4 && client.pmIn.NewRead() == arg.BytesTransferred)
+			{
+				switch (client.pmIn.ReadCommand())
+				{
+						// Connection attempt
+					case Command.CONNECT:
+						{
+							cw.WriteLine(Remote.Language.Find("IncomingConnection", this, "Incoming connection attempt from: {0}"), client.ClientAddress);
+							Command c = client.pmIn.ReadCommand();
+							if (c == Command.USER_NAME)
+							{
+								Dispatcher.Invoke(new Action(() =>
+								{
+									Label l = new Label();
+									l.Content = client.pmIn.ReadString();
+									StackPanel sp = new StackPanel();
+									sp.Children.Add(l);
+									connectedComputersItems.Add(sp);
+									ConnectedComputers.ItemsSource = connectedComputersItems;
+								}),
+								DispatcherPriority.Render);
+								client.pmOut.Write(Command.CONNECT_SUCCESS);
+								client.pmOut.End();
+								if (client.SendSafe())
+								{
+									cw.WriteLine(Remote.Language.Find("ClientConnectSuccess", this, "Client from {0} successfully connected!"), client.ClientAddress);
+									return true;
+								}
+								else
+								{
+									cw.WriteLine(client.lastSendException.Message);
+									client = null;
+								}
+							}
+						}
+						break;
+						// Success!
+					case Command.CONNECT_SUCCESS:
+						{
+							cw.WriteLine(Remote.Language.Find("ClientConnected", this, "Succesfully connected to {0}"), client.ClientAddress);
+							return true;
+						}
+					default:
+						break;
+				}
+			}
+
 			return false;
 		}
 		/*protected override void OnPreviewKeyDown(KeyEventArgs e)
@@ -412,13 +467,25 @@ namespace RemoteGUI
 					client.StartReceiveAsync(OnReceiveAsync);
 
 					client.socket.SendTimeout = 2000;
-					client.socket.ReceiveTimeout = 2000;
+					client.socket.ReceiveTimeout = 5000;
 
+					client.pmOut.Write(Command.CONNECT);
+					client.pmOut.Write(Command.USER_NAME);
+					client.pmOut.Write(Settings.s.name);
+					client.pmOut.End();
+
+					if (client.SendSafe())
+					{
+						cw.WriteLine(Remote.Language.Find("ClientConnecting", this, "Connecting to {0}"), Address.Text);
+						return;
+					}
+					else
+					{
+						cw.WriteLine(client.lastSendException.Message);
+						client = null;
+					}
 					
-					
-					
-					
-					cw.WriteLine(Remote.Language.Find("ClientConnected", this, "Succesfully conencted to {0}"), Address.Text);
+					//cw.WriteLine(Remote.Language.Find("ClientConnected", this, "Succesfully conencted to {0}"), Address.Text);
 					
 				}
 				catch (System.Net.Sockets.SocketException ee)

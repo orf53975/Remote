@@ -41,4 +41,7 @@ RemoteGUI.MainWindow.AutoStartServerComboBox.ItemsSource => ()
 
 # Console
 RemoteGUI.MainWindow.Connect_Click.ClientNotNull = Egy kapcsolat már él!
-RemoteGUI.MainWindow.Connect_Click.ClientConnected = Sikeresen csatlakozva a következő címhez: {0}
+RemoteGUI.MainWindow.Connect_Click.ClientConnecting = Csatlakozás a következő címhez: {0}
+RemoteGUI.MainWindow.OnReceiveAsync.IncomingConnection = Csatlakozási kísérlet a következő címről : {0}
+RemoteGUI.MainWindow.OnReceiveAsync.ClientConnectSuccess = A kapcsolat a következő címhez sikeresen létrejött: {0}
+RemoteGUI.MainWindow.OnReceiveAsync.ClientConnected = Sikeresen csatlakozva a következő címhez: {0}

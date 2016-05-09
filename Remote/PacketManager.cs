@@ -41,6 +41,7 @@ namespace Remote
 		{
 			bw.Write((int)c);
 		}
+		[Obsolete]
 		public Command Read()
 		{
 			return (Command)br.ReadInt32();
@@ -64,6 +65,10 @@ namespace Remote
 			}
 		}
 		#region Write
+		public void Write(Command c)
+		{
+			bw.Write((int)c);
+		}
 		public void Write(bool value)
 		{
 			bw.Write(value);
@@ -138,6 +143,10 @@ namespace Remote
 		}
 		#endregion
 		#region Read
+		public Command ReadCommand()
+		{
+			return (Command)br.ReadInt32();
+		}
 		public bool ReadBoolean()
 		{
 			return br.ReadBoolean();

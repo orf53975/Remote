@@ -88,12 +88,13 @@ namespace Remote
 			public PacketManager p;
 			public PacketManager pmIn;
 			public PacketManager pmOut;
+			public int BytesSent;
+			public SocketException lastSendException;
 			public IPAddress ClientAddress
 			{
 				get
 				{
-					return (socket != null && socket.RemoteEndPoint != null) ?
-						((IPEndPoint)socket.RemoteEndPoint).Address : null;
+					return (socket != null && socket.RemoteEndPoint != null) ? ((IPEndPoint)socket.RemoteEndPoint).Address : null;
 				}
 			}
 			public Client()
@@ -141,12 +142,17 @@ namespace Remote
 			private void Received(object sender, SocketAsyncEventArgs e)
 			{
 				if(onReceiveAsync(e)) Resume(e);
+				else
+				{
+					e.Completed -= Received;
+					e.Dispose();
+				}
 			}
 			public void Send(int count)
 			{
 				if (socket != null && socket.Connected)
 				{
-					SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+					/*SocketAsyncEventArgs args = new SocketAsyncEventArgs();
 					if (args != null)
 					{
 
@@ -162,8 +168,51 @@ namespace Remote
 					else
 					{
 						Console.WriteLine("Client {0}'s SocketArgs are null", this);
+					}*/
+					BytesSent = socket.Send(bufferOut, count, SocketFlags.None);
+				}
+			}
+			public bool SendSafe()
+			{
+				if (socket != null && socket.Connected)
+				{
+					try
+					{
+						BytesSent = socket.Send(bufferOut, pmOut.Size, SocketFlags.None);
+						lastSendException = null;
+						return true;
+					}
+					catch (SocketException se)
+					{
+						BytesSent = -1;
+						lastSendException = se;
+						return false;
 					}
 				}
+				lastSendException = null;
+				BytesSent = -1;
+				return false;
+			}
+			public bool SendSafe(int count)
+			{
+				if (socket != null && socket.Connected)
+				{
+					try
+					{
+						BytesSent = socket.Send(bufferOut, count, SocketFlags.None);
+						lastSendException = null;
+						return true;
+					}
+					catch (SocketException se)
+					{
+						BytesSent = -1;
+						lastSendException = se;
+						return false;
+					}
+				}
+				lastSendException = null;
+				BytesSent = -1;
+				return false;
 			}
 			public void Send(byte[] data, int count)
 			{
