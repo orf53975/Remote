@@ -18,6 +18,7 @@ namespace Remote
 			public IPAddress ipAddress;
 			public IPEndPoint ipEndPoint;
 			public Func<SocketAsyncEventArgs, bool> onConnectionAccept;
+			private SocketAsyncEventArgs arg;
 			public Server(string address, int port)
 			{
 				ipAddress = IPAddress.Parse(address);
@@ -33,6 +34,12 @@ namespace Remote
 			public void Close()
 			{
 				socket.Close();
+				if (arg != null)
+				{
+					arg.Completed -= Received;
+					arg.Dispose();
+					arg = null;
+				}
 				socket = null;
 			}
 			public bool Listen()
@@ -60,6 +67,9 @@ namespace Remote
 			{
 				SocketAsyncEventArgs arg = new SocketAsyncEventArgs();
 				arg.Completed += Received;
+				arg.UserToken = this;
+				// Don't ask me why I'm doing it that way...
+				this.arg = arg;
 				Start(arg);
 			}
 			private void Start(SocketAsyncEventArgs arg)
@@ -117,8 +127,12 @@ namespace Remote
 			public void Close()
 			{
 				socket.Close();
-				arg.Completed -= Received;
-				arg = null;
+				if (arg != null)
+				{
+					arg.Completed -= Received;
+					arg.Dispose();
+					arg = null;
+				}
 				p.Dispose();
 				pmIn.Dispose();
 				pmOut.Dispose();
