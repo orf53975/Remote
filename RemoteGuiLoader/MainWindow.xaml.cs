@@ -20,15 +20,16 @@ namespace RemoteGuiLoader
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		Action empty = delegate { };
 		public MainWindow()
 		{
 			InitializeComponent();
 		}
 		public void ChangeText(string text)
 		{
-			ProgressText.Content = text;
-			Dispatcher.Invoke(empty , System.Windows.Threading.DispatcherPriority.Render);
+			Dispatcher.Invoke(new Action(() =>
+			{
+				ProgressText.Content = text;
+			}), System.Windows.Threading.DispatcherPriority.Render);
 		}
 	}
 }
