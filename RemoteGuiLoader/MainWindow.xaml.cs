@@ -20,6 +20,7 @@ namespace RemoteGuiLoader
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		Action empty = delegate { };
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -30,6 +31,9 @@ namespace RemoteGuiLoader
 			{
 				ProgressText.Content = text;
 			}), System.Windows.Threading.DispatcherPriority.Render);
+
+			// Notes: It seems without this, the label is one update behind always, dont ask me why :(
+			Dispatcher.Invoke(empty, System.Windows.Threading.DispatcherPriority.Render);
 		}
 	}
 }
