@@ -44,11 +44,11 @@ namespace RemoteGUI
 							System.Net.IPAddress address;
 							if (System.Net.IPAddress.TryParse(e.Args[1], out address))
 							{
-								rd.client = new SOCKET.Client();
-								rd.client.socket = new System.Net.Sockets.Socket(new System.Net.IPEndPoint(address, 6546).AddressFamily, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
+								rd.clientStream = new SOCKET.Client();
+								rd.clientStream.socket = new System.Net.Sockets.Socket(new System.Net.IPEndPoint(address, 6546).AddressFamily, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
 								try
 								{
-									rd.client.socket.Connect(address, 6546);
+									rd.clientStream.socket.Connect(address, 6546);
 								}
 								catch (System.Net.Sockets.SocketException ee)
 								{
@@ -56,7 +56,7 @@ namespace RemoteGUI
 									//Console.WriteLine(e);
 								}
 							}
-							PacketManager pmOut = rd.client.pmOut;
+							PacketManager pmOut = rd.clientStream.pmOut;
 							pmOut.New();
 							pmOut.Set(Command.REMOTE_DESKTOP);
 							pmOut.bw.Write(UserControls.RemoteDesktopOptions.screenCaptureMethods[o.rd.ScreenCaptureMethodComboBox.SelectedIndex]);

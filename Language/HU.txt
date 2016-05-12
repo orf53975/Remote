@@ -40,10 +40,11 @@ RemoteGUI.MainWindow.AutoStartServerComboBox.ItemsSource => ()
 		() => end
 
 # Console
-RemoteGUI.MainWindow.Connect_Click.ClientNotNull = Egy kapcsolat már él!
+#RemoteGUI.MainWindow.Connect_Click.ClientNotNull = Egy kapcsolat már él!
 RemoteGUI.MainWindow.Connect_Click.ClientConnecting = Csatlakozás a következő címhez: {0}
 RemoteGUI.MainWindow.OnReceiveAsync.IncomingConnection = Csatlakozási kísérlet a következő címről : {0}
 RemoteGUI.MainWindow.OnReceiveAsync.ClientConnectSuccess = A kapcsolat a következő címhez sikeresen létrejött: {0}
 RemoteGUI.MainWindow.OnReceiveAsync.ClientConnected = Sikeresen csatlakozva a következő címhez: {0}
 RemoteGUI.MainWindow.RemoteDesktopConnectButton_Click.RemoteDesktopRequest = Távoli asztal kisérlet elküldve: {0} / {1}
 RemoteGUI.MainWindow.OnReceiveAsync.RemoteDesktopRequestIncoming = {0} / {1} Távoli asztali kérelmet küldött
+RemoteGUI.MainWindow.OnReceiveAsync.RemoteDekstopCaptureInfoRequestClientDisconnected = A kapcsolat megszakadt a Távoli asztal kapcsolat inicializálása során

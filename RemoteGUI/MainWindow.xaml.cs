@@ -22,6 +22,7 @@ using Remote;
 using MahApps.Metro.Controls;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.InteropServices;
 namespace RemoteGUI
 {
 	/// <summary>
@@ -47,11 +48,15 @@ namespace RemoteGUI
 		public bool serverEmpty = true;
 
 		SOCKET.Server server;
-		SOCKET.Client client;
+		//List<SOCKET.Client> client;
+
+		RemoteDesktopHost host;
 
 		List<StackPanel> connectedComputersItems = new List<StackPanel>();
 		//Dictionary<StackPanel, ClientData> connectedComputersBinding = new Dictionary<StackPanel, ClientData>();
 		Clients clients = new Clients();
+		public static RemoteGuiLoader.MainWindow loader = new RemoteGuiLoader.MainWindow();
+		Command lastCommand;
 
 		ConsoleWriter cw = new ConsoleWriter(1000);
 		string tempText;
@@ -74,6 +79,7 @@ namespace RemoteGUI
 
 			InitializeComponent();
 			Loaded += MainWindow_Loaded;
+			Closing += MainWindow_Closing;
 
 			FlyoutsControlAll.Visibility = System.Windows.Visibility.Visible;
 			ConnectedInfo.Visibility = System.Windows.Visibility.Hidden;
@@ -164,6 +170,15 @@ namespace RemoteGUI
 
 		}
 
+		void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			foreach (var item in clients)
+			{
+				item.client.Close();
+			}
+			loader.Close();
+		}
+
 		void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
 
@@ -200,18 +215,36 @@ namespace RemoteGUI
 
 		private bool OnConnectionAccept(System.Net.Sockets.SocketAsyncEventArgs arg)
 		{
-			client = new SOCKET.Client();
-			client.socket = arg.AcceptSocket;
-			client.StartReceiveAsync(OnReceiveAsync);
-			// Note: Allow more connection? Maybe we should read it from Settings?
-			return false;
+			Dispatcher.Invoke(new Action(() =>
+			{
+				ClientData cd = new ClientData();
+				cd.client = new SOCKET.Client();
+				cd.client.socket = arg.AcceptSocket;
+
+				StackPanel sp = new StackPanel();
+				Label l = new Label();
+				l.Content = "No name yet";
+				cd.lName = l;
+				sp.Children.Add(l);
+				clients[sp] = cd;
+				cd.sp = sp;
+
+				cd.client.StartReceiveAsync(OnReceiveAsync);
+			}), DispatcherPriority.Render);
+
+			return true;
 		}
 		private bool OnReceiveAsync(System.Net.Sockets.SocketAsyncEventArgs arg)
 		{
+			// Get the client object from arg
+			SOCKET.Client client = (SOCKET.Client)arg.UserToken;
+
 			// Notes: First 4 bytes are the size of the message.
+			// Notes: It's impossible to send only 4 bytes, as that would mean we only send the message size, which doesn't make sense , so this must be always bigger than 4 bytes
 			if (arg.BytesTransferred > 4 && client.pmIn.NewRead() == arg.BytesTransferred)
 			{
-				switch (client.pmIn.ReadCommand())
+				lastCommand = client.pmIn.ReadCommand();
+				switch (lastCommand)
 				{
 						// Connection attempt
 					case Command.CONNECT:
@@ -223,22 +256,18 @@ namespace RemoteGUI
 							{
 								Dispatcher.Invoke(new Action(() =>
 								{
-									ClientData cd = new ClientData();
-									cd.client = client;
-									Label l = new Label();
-									cd.name = client.pmIn.ReadString();
-									cd.lName = l;
-									l.Content = cd.name;
+									foreach (var cd in clients)
+									{
+										if (cd.client == client)
+										{
+											cd.name = client.pmIn.ReadString();
+											cd.lName.Content = cd.name;
 
-									// Todo: Implement Client array!
-
-									StackPanel sp = new StackPanel();
-									sp.Children.Add(l);
-									//connectedComputersBinding.Add(sp, cd);
-									clients[sp] = cd;
-									connectedComputersItems.Add(sp);
-									
-									ConnectedComputers.ItemsSource = connectedComputersItems;
+											connectedComputersItems.Add(cd.sp);
+											ConnectedComputers.ItemsSource = connectedComputersItems;
+											break;
+										}
+									}
 								}),
 								DispatcherPriority.Render);
 								client.pmOut.New();
@@ -278,8 +307,6 @@ namespace RemoteGUI
 									cd.lName = l;
 									l.Content = cd.name;
 
-									// Todo: Implement Client array!
-
 									StackPanel sp = new StackPanel();
 									sp.Children.Add(l);
 									//connectedComputersBinding.Add(sp, cd);
@@ -293,7 +320,7 @@ namespace RemoteGUI
 						}
 						#endregion
 					case Command.REMOTE_DESKTOP_REQUEST:
-					#region REMOTE_DESKTOP_REQUEST
+						#region REMOTE_DESKTOP_REQUEST
 						{
 							ClientData cd = clients[(SOCKET.Client)arg.UserToken];
 							cd.remoteDesktopRequest = true;
@@ -302,9 +329,182 @@ namespace RemoteGUI
 								ConnectedComputers_SelectionChanged(null, null);
 							}), DispatcherPriority.Render);
 							cw.WriteLine(Remote.Language.Find("RemoteDesktopRequestIncoming", this, "A Remote Desktop request was received from {0} / {1}"), cd.name, cd.client.ClientAddress);
+							return true;
+						}
+						#endregion
+					case Command.REMOTE_DESKTOP_CAPTURE_INFO_REQUEST:
+						#region REMOTE_DESKTOP_CAPTURE_INFO_REQUEST
+						{
+							Dispatcher.Invoke(new Action(() =>
+								{
+									this.WindowState = System.Windows.WindowState.Minimized;
+									loader.Show();
+								}), DispatcherPriority.Render);
+							loader.ChangeText("Sending streaming settings...");
+
+							ClientData cd = clients[(SOCKET.Client)arg.UserToken];
+
+							cd.client.pmOut.New();
+							cd.client.pmOut.Write(Command.REMOTE_DESKTOP_CAPTURE_INFO);
+
+							ProtoBuf.Serializer.SerializeWithLengthPrefix(cd.client.pmOut.Stream, Settings.s.remoteDesktopSettings, ProtoBuf.PrefixStyle.Base128);
+
+							cd.client.pmOut.End();
+
+							if (cd.client.SendSafe())
+							{
+								return true;
+							}
+							else
+							{
+
+							}
+
 						}
 						break;
-					#endregion
+						#endregion
+					case Command.REMOTE_DESKTOP_CAPTURE_INFO:
+						#region REMOTE_DESKTOP_CAPTURE_INFO
+						{
+							loader.ChangeText("Creating host...");
+
+							ClientData cd = clients[(SOCKET.Client)arg.UserToken];
+
+							Settings.RemoteDesktopSettings s = ProtoBuf.Serializer.DeserializeWithLengthPrefix<Settings.RemoteDesktopSettings>(cd.client.pmIn.Stream, ProtoBuf.PrefixStyle.Base128);
+							host = new RemoteDesktopHost(s);
+
+							cd.client.pmOut.New();
+							cd.client.pmOut.Write(Command.REMOTE_DESKTOP_HOST_READY);
+
+							cd.client.pmOut.Write(SystemParameters.PrimaryScreenWidth);
+							cd.client.pmOut.Write(SystemParameters.PrimaryScreenHeight);
+
+							cd.client.pmOut.End();
+
+							if (cd.client.SendSafe())
+							{
+								return true;
+							}
+							else
+							{
+								
+							}
+						}
+						break;
+						#endregion
+					case Command.REMOTE_DESKTOP_HOST_READY:
+						#region REMOTE_DESKTOP_HOST_READY
+						{
+							loader.ChangeText("Creating streaming connection...");
+							bool whatToReturn = false;
+							RemoteDesktop rd;
+							Dispatcher.Invoke(new Action(() =>
+							{
+								rd = new RemoteDesktop();
+								rd.x = (int)client.pmIn.ReadDouble();
+								rd.y = (int)client.pmIn.ReadDouble();
+
+								System.Net.IPAddress address = client.ClientAddress;
+
+								rd.clientStream = new SOCKET.Client();
+								rd.clientStream.socket = new System.Net.Sockets.Socket(new System.Net.IPEndPoint(address, Settings.s.remoteDesktopPort).AddressFamily, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
+								try
+								{
+									rd.clientStream.socket.Connect(address, Settings.s.remoteDesktopPort);
+									rd.clientStream.StartReceiveAsync(rd.OnReceiveAsyncStream);
+
+									rd.clientStream.socket.SendTimeout = 5000;
+									rd.clientStream.socket.ReceiveTimeout = 5000;
+
+									rd.clientStream.pmOut.Write(Command.REMOTE_DESKTOP_CONNECT_STREAM);
+
+									rd.clientStream.pmOut.End();
+
+									if (rd.clientStream.SendSafe())
+									{
+										//cw.WriteLine(Remote.Language.Find("ClientConnecting", this, "Connecting to {0}"), Address.Text);
+										whatToReturn = true;
+									}
+									else
+									{
+										cw.WriteLine(rd.clientStream.lastSendException.Message);
+										rd.clientStream.Close();
+										rd.clientStream = null;
+										whatToReturn = false;
+									}
+
+									//cw.WriteLine(Remote.Language.Find("ClientConnected", this, "Succesfully conencted to {0}"), Address.Text);
+
+								}
+								catch (System.Net.Sockets.SocketException ee)
+								{
+									cw.WriteLine(ee.Message);
+									rd.clientStream.Close();
+									rd.clientStream = null;
+								}
+							}), DispatcherPriority.Render);
+							if (whatToReturn) return true;
+							else return false;
+						}
+						#endregion
+					case Command.REMOTE_DESKTOP_CONNECT_STREAM:
+						#region REMOTE_DESKTOP_CONNECT_STREAM
+						{
+							loader.ChangeText("Streaming connection created...");
+							ClientData cd = clients[(SOCKET.Client)arg.UserToken];
+							Dispatcher.Invoke(new Action(() =>
+							{
+								cd.sp.Children.Remove(cd.lName);
+								clients.Remove(cd);
+								host.clientStream = cd.client;
+								host.clientStream.onReceiveAsync = host.OnReceiveAsync;
+							}), DispatcherPriority.Render);
+
+							host.clientStream.pmOut.New();
+							host.clientStream.pmOut.Write(Command.REMOTE_DESKTOP_CONNECT_STREAM_SUCCESS);
+							host.clientStream.pmOut.End();
+
+							if (host.clientStream.SendSafe())
+							{
+								return true;
+							}
+							else
+							{
+
+							}
+							// send success
+						}
+						break;
+						#endregion
+					case Command.REMOTE_DESKTOP_CONNECT_INPUT:
+						#region REMOTE_DESKTOP_CONNECT_INPUT
+						{
+							loader.ChangeText("Input stream created...");
+							ClientData cd = clients[(SOCKET.Client)arg.UserToken];
+							Dispatcher.Invoke(new Action(() =>
+							{
+								cd.sp.Children.Remove(cd.lName);
+								clients.Remove(cd);
+								host.clientInput = cd.client;
+								host.clientInput.onReceiveAsync = host.OnReceiveAsyncInput;
+							}), DispatcherPriority.Render);
+
+							host.clientInput.pmOut.New();
+							host.clientInput.pmOut.Write(Command.REMOTE_DESKTOP_CONNECT_INPUT_SUCCESS);
+							host.clientInput.pmOut.End();
+
+							if (host.clientInput.SendSafe())
+							{
+								return true;
+							}
+							else
+							{
+
+							}
+							// send success
+						}
+						break;
+						#endregion
 					default:
 						break;
 				}
@@ -312,6 +512,27 @@ namespace RemoteGUI
 			//Client disconnected, clean up.
 			else if (arg.BytesTransferred == 0)
 			{
+				switch (lastCommand)
+				{
+						// Error? EMPTY_COMMAND = 0
+					case Command.EMPTY_COMMAND:
+						break;
+						// Restore MainWindow upon client fail
+					case Command.REMOTE_DESKTOP_CAPTURE_INFO_REQUEST:
+						{
+							Dispatcher.Invoke(new Action(() =>
+							{
+								loader.Close();
+								loader = new RemoteGuiLoader.MainWindow();
+								WindowState = System.Windows.WindowState.Normal;
+							}), DispatcherPriority.Render);
+							cw.WriteLine(Remote.Language.Find("RemoteDekstopCaptureInfoRequestClientDisconnected", this, "The client disconnected during Remote Desktop initialization"));
+						}
+						break;
+					default:
+						break;
+				}
+
 				foreach (var item in connectedComputersItems)
 				{
 					
@@ -345,7 +566,6 @@ namespace RemoteGUI
 		{
 			//FPS.Content = sajt;
 			//cw.WriteLine(Environment.TickCount.ToString());
-			
 			
 			/*cw.WriteLine(Environment.TickCount.ToString());
 			ConsoleQuickText.Text = cw.GetLastLine();
@@ -514,23 +734,23 @@ namespace RemoteGUI
 		// Todo: Blocking call if failed to connect for about 10-15 sec
 		private void Connect_Click(object sender, RoutedEventArgs e)
 		{
-			if (client != null)
+			/*if (client != null)
 			{
 				cw.WriteLine(Remote.Language.Find("ClientNotNull", this, "A connection is already made!"));
 				return;
-			}
+			}*/
 
 			System.Net.IPAddress address;
 			if (System.Net.IPAddress.TryParse(Address.Text, out address))
 			{
-				client = new SOCKET.Client();
+				SOCKET.Client client = new SOCKET.Client();
 				client.socket = new System.Net.Sockets.Socket(new System.Net.IPEndPoint(address, Settings.s.remoteDesktopPort).AddressFamily, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
 				try
 				{
 					client.socket.Connect(address, Settings.s.remoteDesktopPort);
 					client.StartReceiveAsync(OnReceiveAsync);
 
-					client.socket.SendTimeout = 2000;
+					client.socket.SendTimeout = 5000;
 					client.socket.ReceiveTimeout = 5000;
 
 					client.pmOut.Write(Command.CONNECT);
@@ -825,13 +1045,13 @@ namespace RemoteGUI
 			public FieldInfo fi;
 			public FieldInfo parent;
 		}
-		private class ClientData
+		public class ClientData
 		{
 			public string name;
 			public SOCKET.Client client;
 
 			public Label lName;
-
+			public StackPanel sp;
 
 			public bool remoteDesktopRequest;
 		}
@@ -839,10 +1059,27 @@ namespace RemoteGUI
 		private void RemoteDesktopRequestAcceptButton_Click(object sender, RoutedEventArgs e)
 		{
 			WindowState = System.Windows.WindowState.Minimized;
-			RemoteGuiLoader.MainWindow loader = new RemoteGuiLoader.MainWindow();
 			loader.Show();
-			//loader.Activate();
-			System.Threading.Thread.Sleep(5000);
+			// Do we need it?
+			loader.Activate();
+
+			loader.ChangeText("Wating for Data...");
+			StackPanel sp = connectedComputersItems[ConnectedComputers.SelectedIndex];
+			ClientData cd = clients[sp];
+
+			cd.client.pmOut.New();
+			cd.client.pmOut.Write(Command.REMOTE_DESKTOP_CAPTURE_INFO_REQUEST);
+			cd.client.pmOut.End();
+
+			if (cd.client.SendSafe())
+			{
+				// We need the set lastCommand to this, else if the connection fails midway there is no way knowing what to do
+				lastCommand = Command.REMOTE_DESKTOP_CAPTURE_INFO_REQUEST;
+			}
+			else
+			{
+
+			}
 		}
 		private void RemoteDesktopConnectButton_Click(object sender, RoutedEventArgs e)
 		{
@@ -867,7 +1104,7 @@ namespace RemoteGUI
 				client = null;*/
 			}
 		}
-		private class Clients
+		public class Clients : IEnumerable<ClientData>
 		{
 			private Dictionary<StackPanel, ClientData> spDic = new Dictionary<StackPanel,ClientData>();
 			private Dictionary<SOCKET.Client, ClientData> scDic = new Dictionary<SOCKET.Client, ClientData>();
@@ -893,6 +1130,23 @@ namespace RemoteGUI
 				{
 					scDic[sc] = value;
 				}*/
+			}
+			public void Remove(ClientData cd)
+			{
+				spDic.Remove(cd.sp);
+				scDic.Remove(cd.client);
+			}
+			public IEnumerator<ClientData> GetEnumerator()
+			{
+				foreach (ClientData item in spDic.Values)
+				{
+					yield return item;
+				}
+			}
+
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+			{
+				return GetEnumerator();
 			}
 		}
 	}

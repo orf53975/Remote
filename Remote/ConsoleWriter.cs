@@ -26,6 +26,7 @@ namespace Remote
 
 		private void Append(string s)
 		{
+			if (s == null) return;
 			if (s.Length >= DisplaySize)
 			{
 				// FACT: the display will only include data from s

@@ -33,6 +33,13 @@ namespace Remote
 			br = new BinaryReader(ms);
 			ms.Position = 4L;
 		}
+		public MemoryStream Stream
+		{
+			get
+			{
+				return ms;
+			}
+		}
 		public void New()
 		{
 			ms.Position = 4L;
